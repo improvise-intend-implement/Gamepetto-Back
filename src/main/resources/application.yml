@@ -1,0 +1,17 @@
+server:
+  port: 8090
+  servlet:
+    context-path: "/api"
+
+spring:
+  application:
+    name: GamepettoBackend
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${GAMEPETTO_JDBC_URL}?serverTimezone=UTC
+    username: ${GAMEPETTO_DB_USER}
+    password: ${GAMEPETTO_DB_PASSWORD}
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: create-drop
