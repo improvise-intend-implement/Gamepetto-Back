@@ -17,7 +17,7 @@ public class Guild implements Serializable {
     @Id
     @GeneratedValue
     private Long id;
-    @Column(length = 64, nullable = false, unique = true)
+    @Column(length = 32, nullable = false, unique = true)
     private String guildId;
     @Column(nullable = false, length = 100)
     private String name;

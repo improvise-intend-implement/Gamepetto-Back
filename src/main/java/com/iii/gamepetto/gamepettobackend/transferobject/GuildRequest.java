@@ -5,7 +5,6 @@ import java.io.Serializable;
 public class GuildRequest implements Serializable {
 
     private static final long serialVersionUID = -5783557158853448407L;
-
     private String guildId;
     private String name;
     private String icon;
