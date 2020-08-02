@@ -2,13 +2,15 @@ package com.iii.gamepetto.gamepettobackend.service;
 
 import com.iii.gamepetto.gamepettobackend.model.Guild;
 import com.iii.gamepetto.gamepettobackend.repository.GuildRepository;
-import com.iii.gamepetto.gamepettobackend.request.GuildRequest;
-import com.iii.gamepetto.gamepettobackend.response.GuildResponse;
+import com.iii.gamepetto.gamepettobackend.transferobject.GuildRequest;
+import com.iii.gamepetto.gamepettobackend.transferobject.GuildResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
+import org.modelmapper.ModelMapper;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -22,6 +24,8 @@ class GuildServiceImplTest {
 
     @Mock
     private GuildRepository guildRepository;
+    @Spy
+    private ModelMapper modelMapper;
     @InjectMocks
     private GuildServiceImpl guildService;
 

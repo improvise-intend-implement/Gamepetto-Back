@@ -1,4 +1,4 @@
-package com.iii.gamepetto.gamepettobackend.request;
+package com.iii.gamepetto.gamepettobackend.transferobject;
 
 import java.io.Serializable;
 

@@ -1,7 +1,7 @@
 package com.iii.gamepetto.gamepettobackend.service;
 
-import com.iii.gamepetto.gamepettobackend.request.GuildRequest;
-import com.iii.gamepetto.gamepettobackend.response.GuildResponse;
+import com.iii.gamepetto.gamepettobackend.transferobject.GuildRequest;
+import com.iii.gamepetto.gamepettobackend.transferobject.GuildResponse;
 
 public interface GuildService {
 
