@@ -31,7 +31,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         ErrorDetails errorDetails = new ErrorDetails(new Date(), "Validation Failed");
         ex.getBindingResult().getFieldErrors()
                 .forEach(e -> errorDetails.addFieldError(e.getField(), e.getRejectedValue(), messageSource.getMessage(e, LocaleContextHolder.getLocale())));
-        return new ResponseEntity<>(errorDetails, new HttpHeaders(), HttpStatus.PARTIAL_CONTENT);
+        return new ResponseEntity<>(errorDetails, new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 
 }
