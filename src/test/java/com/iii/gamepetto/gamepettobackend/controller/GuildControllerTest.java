@@ -23,12 +23,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class GuildControllerTest {
 
+    private final ObjectMapper objectMapper = new ObjectMapper();
     private MockMvc mockMvc;
     @Mock
     private GuildService guildService;
     @InjectMocks
     private GuildController sut;
-    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @BeforeEach
     public void setup() {

@@ -5,9 +5,9 @@ import java.util.Date;
 import java.util.List;
 
 public class ErrorDetails {
+    private final List<FieldError> fieldErrors = new ArrayList<>();
     private Date timestamp;
     private String message;
-    private final List<FieldError> fieldErrors = new ArrayList<>();
 
     public ErrorDetails(Date timestamp, String message) {
         this.timestamp = timestamp;
