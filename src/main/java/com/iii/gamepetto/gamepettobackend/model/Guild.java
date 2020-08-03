@@ -1,6 +1,8 @@
 package com.iii.gamepetto.gamepettobackend.model;
 
 import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.Generated;
+import org.hibernate.annotations.GenerationTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,6 +27,7 @@ public class Guild implements Serializable {
     private String icon;
     @Column(columnDefinition = "BOOLEAN DEFAULT TRUE NOT NULL")
     private Boolean botPresent;
+    @Generated(GenerationTime.INSERT)
     @Column(columnDefinition = "VARCHAR(8) DEFAULT '!gp'")
     private String botPrefix;
 
