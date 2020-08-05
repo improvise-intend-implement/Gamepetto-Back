@@ -17,6 +17,8 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Set up JDK 11
+      env:
+        GAMEPETTO_SPRING_PROFILE: test
       uses: actions/setup-java@v1
       with:
         java-version: 11
@@ -26,5 +28,8 @@ jobs:
         path: ~/.m2
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-m2
+    - name: Set environment variables
+      env:
+        GAMEPETTO_SPRING_PROFILE: test
     - name: Build with Maven
       run: mvn test
