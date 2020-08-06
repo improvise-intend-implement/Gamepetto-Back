@@ -17,22 +17,8 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: ${GAMEPETTO_JDBC_URL}?serverTimezone=UTC
     username: ${GAMEPETTO_DB_USER}
-    password: ${GAMEPETTO_DB_PASSWORD}
+
   jpa:
     show-sql: true
-    hibernate:
-      ddl-auto: create-drop
-
----
-
-spring:
-  profiles: test
-  datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:db;DB_CLOSE_DELAY=-1
-    username: sa
-    password: sa
-  jpa:
-    show-sql: false
     hibernate:
       ddl-auto: create-drop
