@@ -14,10 +14,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -67,6 +69,30 @@ class GuildControllerTest {
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest());
         then(guildService).should(never()).saveOrUpdate(any(GuildRequest.class));
+    }
+
+    @Test
+    public void removeGuildShouldReturnOkWhenGuildExist() throws Exception {
+        //given
+        given(guildService.updateBotPresentToFalse(anyString())).willReturn(true);
+
+        //when
+        //then
+        mockMvc.perform(delete("/guild/1234"))
+                .andExpect(status().isOk());
+        then(guildService).should(times(1)).updateBotPresentToFalse(anyString());
+    }
+
+    @Test
+    public void removeGuildShouldReturnNotFoundWhenGuildDoesntExist() throws Exception {
+        //given
+        given(guildService.updateBotPresentToFalse(anyString())).willReturn(false);
+
+        //when
+        //then
+        mockMvc.perform(delete("/guild/1234"))
+                .andExpect(status().isNotFound());
+        then(guildService).should(times(1)).updateBotPresentToFalse(anyString());
     }
 
 }

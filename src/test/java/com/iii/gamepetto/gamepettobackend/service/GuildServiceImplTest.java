@@ -80,4 +80,41 @@ class GuildServiceImplTest {
         //then
         then(guild).should(times(1)).setBotPresent(true);
     }
+
+    @Test
+    public void updateBotPresentToFalseShouldReturnTrueWhenGuildExists() {
+        //given
+        given(this.guildRepository.findByGuildId(anyString())).willReturn(new Guild());
+
+        //when
+        boolean result = this.guildService.updateBotPresentToFalse(anyString());
+
+        //then
+        assertThat(result, is(true));
+    }
+
+    @Test
+    public void updateBotPresentToFalseShouldReturnFalseWhenGuildDoesntExist() {
+        //given
+        given(this.guildRepository.findByGuildId(anyString())).willReturn(null);
+
+        //when
+        boolean result = this.guildService.updateBotPresentToFalse(anyString());
+
+        //then
+        assertThat(result, is(false));
+    }
+
+    @Test
+    public void updateBotPresentToFalseShouldSetThePropertyToFalseWhenGuildExists() {
+        //given
+        Guild guild = mock(Guild.class);
+        given(this.guildRepository.findByGuildId(anyString())).willReturn(guild);
+
+        //when
+        this.guildService.updateBotPresentToFalse(anyString());
+
+        //then
+        then(guild).should(times(1)).setBotPresent(false);
+    }
 }
