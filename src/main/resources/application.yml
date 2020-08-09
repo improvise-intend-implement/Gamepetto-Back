@@ -17,7 +17,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: ${GAMEPETTO_JDBC_URL}?serverTimezone=UTC
     username: ${GAMEPETTO_DB_USER}
-
+    password: ${GAMEPETTO_DB_PASSWORD}
   jpa:
     show-sql: true
     hibernate:

@@ -7,4 +7,5 @@ public interface GuildService {
 
     GuildResponse saveOrUpdate(GuildRequest guildRequest);
 
+    boolean updateBotPresentToFalse(String guildId);
 }

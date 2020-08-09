@@ -30,4 +30,13 @@ public class GuildServiceImpl implements GuildService {
         return modelMapper.map(guild, GuildResponse.class);
     }
 
+    @Override
+    public boolean updateBotPresentToFalse(String guildId) {
+        Guild guild = this.guildRepository.findByGuildId(guildId);
+        if (guild == null) {
+            return false;
+        }
+        guild.setBotPresent(false);
+        return true;
+    }
 }

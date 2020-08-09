@@ -5,6 +5,7 @@ import com.iii.gamepetto.gamepettobackend.transferobject.GuildRequest;
 import com.iii.gamepetto.gamepettobackend.transferobject.GuildResponse;
 import com.iii.gamepetto.gamepettobackend.validator.GuildRequestValidator;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,5 +30,14 @@ public class GuildController {
     @ResponseStatus(HttpStatus.CREATED)
     public GuildResponse addGuild(@Valid @RequestBody final GuildRequest guildRequest) {
         return this.guildService.saveOrUpdate(guildRequest);
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<String> removeGuild(@PathVariable String id) {
+        boolean isRemoved = this.guildService.updateBotPresentToFalse(id);
+        if (!isRemoved) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(id, HttpStatus.OK);
     }
 }
