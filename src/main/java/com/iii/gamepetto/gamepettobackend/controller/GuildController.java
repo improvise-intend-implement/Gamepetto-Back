@@ -36,7 +36,7 @@ public class GuildController {
     public ResponseEntity<String> removeGuild(@PathVariable String id) {
         boolean isRemoved = this.guildService.updateBotPresentToFalse(id);
         if (!isRemoved) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(id, HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(id, HttpStatus.OK);
     }

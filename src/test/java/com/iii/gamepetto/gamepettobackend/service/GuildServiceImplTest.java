@@ -24,19 +24,19 @@ import static org.mockito.Mockito.times;
 class GuildServiceImplTest {
 
     @Mock
-    private GuildRepository guildRepository;
+    GuildRepository guildRepository;
     @Spy
-    private ModelMapper modelMapper;
+    ModelMapper modelMapper;
     @InjectMocks
-    private GuildServiceImpl guildService;
+    GuildServiceImpl guildService;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         MockitoAnnotations.initMocks(this);
     }
 
     @Test
-    public void saveOrUpdateShouldCallSaveMethodFromRepository() {
+    void saveOrUpdateShouldCallSaveMethodFromRepository() {
         //given
         given(this.guildRepository.findByGuildId(anyString())).willReturn(null);
         given(this.guildRepository.save(any(Guild.class))).willReturn(new Guild());
@@ -49,7 +49,7 @@ class GuildServiceImplTest {
     }
 
     @Test
-    public void saveOrUpdateShouldReturnAppropriateObject() {
+    void saveOrUpdateShouldReturnAppropriateObject() {
         //given
         Guild guild = new Guild();
         guild.setId(1L);
@@ -68,7 +68,7 @@ class GuildServiceImplTest {
     }
 
     @Test
-    public void saveOrUpdateShouldSetBotPresentToTrueWhenServerExistsInDb() {
+    void saveOrUpdateShouldSetBotPresentToTrueWhenServerExistsInDb() {
         //given
         Guild guild = mock(Guild.class);
         given(this.guildRepository.findByGuildId(any())).willReturn(guild);
@@ -82,7 +82,7 @@ class GuildServiceImplTest {
     }
 
     @Test
-    public void updateBotPresentToFalseShouldReturnTrueWhenGuildExists() {
+    void updateBotPresentToFalseShouldReturnTrueWhenGuildExists() {
         //given
         given(this.guildRepository.findByGuildId(anyString())).willReturn(new Guild());
 
@@ -94,7 +94,7 @@ class GuildServiceImplTest {
     }
 
     @Test
-    public void updateBotPresentToFalseShouldReturnFalseWhenGuildDoesntExist() {
+    void updateBotPresentToFalseShouldReturnFalseWhenGuildDoesntExist() {
         //given
         given(this.guildRepository.findByGuildId(anyString())).willReturn(null);
 
@@ -106,7 +106,7 @@ class GuildServiceImplTest {
     }
 
     @Test
-    public void updateBotPresentToFalseShouldSetThePropertyToFalseWhenGuildExists() {
+    void updateBotPresentToFalseShouldSetThePropertyToFalseWhenGuildExists() {
         //given
         Guild guild = mock(Guild.class);
         given(this.guildRepository.findByGuildId(anyString())).willReturn(guild);
