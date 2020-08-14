@@ -10,13 +10,13 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
 @DataJpaTest
-public class GuildRepositoryIntegrationTest {
+class GuildRepositoryIntegrationTest {
 
 	@Autowired
-	private GuildRepository sut;
+	GuildRepository sut;
 
 	@Test
-	public void findByGuildIdShouldReturnGuildWhenExistsInDb() {
+	void findByGuildIdShouldReturnGuildWhenExistsInDb() {
 		//given
 		Long id = 1L;
 		String guildId = "12345";
@@ -25,10 +25,10 @@ public class GuildRepositoryIntegrationTest {
 		guild.setId(id);
 		guild.setGuildId(guildId);
 		guild.setName(name);
-		sut.save(guild);
+		this.sut.save(guild);
 
 		//when
-		Guild result = sut.findByGuildId(guildId);
+		Guild result = this.sut.findByGuildId(guildId);
 
 		//then
 		Assertions.assertNotNull(result);
