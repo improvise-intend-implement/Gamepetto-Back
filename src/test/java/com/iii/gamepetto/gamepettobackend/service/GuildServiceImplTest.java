@@ -2,8 +2,9 @@ package com.iii.gamepetto.gamepettobackend.service;
 
 import com.iii.gamepetto.gamepettobackend.model.Guild;
 import com.iii.gamepetto.gamepettobackend.repository.GuildRepository;
-import com.iii.gamepetto.gamepettobackend.transferobject.GuildRequest;
-import com.iii.gamepetto.gamepettobackend.transferobject.GuildResponse;
+import com.iii.gamepetto.gamepettobackend.transferobject.GuildPrefix;
+import com.iii.gamepetto.gamepettobackend.transferobject.request.GuildRequest;
+import com.iii.gamepetto.gamepettobackend.transferobject.response.GuildResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -11,6 +12,12 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.modelmapper.ModelMapper;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -28,7 +35,7 @@ class GuildServiceImplTest {
     @Spy
     ModelMapper modelMapper;
     @InjectMocks
-    GuildServiceImpl guildService;
+    GuildServiceImpl sut;
 
     @BeforeEach
     void setup() {
@@ -42,7 +49,7 @@ class GuildServiceImplTest {
         given(this.guildRepository.save(any(Guild.class))).willReturn(new Guild());
 
         //when
-        this.guildService.saveOrUpdate(new GuildRequest());
+        this.sut.saveOrUpdate(new GuildRequest());
 
         //then
         then(this.guildRepository).should(times(1)).save(any(Guild.class));
@@ -59,7 +66,7 @@ class GuildServiceImplTest {
         given(this.guildRepository.save(any(Guild.class))).willReturn(guild);
 
         //when
-        GuildResponse result = this.guildService.saveOrUpdate(new GuildRequest());
+        GuildResponse result = this.sut.saveOrUpdate(new GuildRequest());
 
         //then
         assertThat(result.getId(), is(guild.getId()));
@@ -75,7 +82,7 @@ class GuildServiceImplTest {
         given(this.guildRepository.save(any(Guild.class))).willReturn(new Guild());
 
         //when
-        this.guildService.saveOrUpdate(new GuildRequest());
+        this.sut.saveOrUpdate(new GuildRequest());
 
         //then
         then(guild).should(times(1)).setBotPresent(true);
@@ -87,7 +94,7 @@ class GuildServiceImplTest {
         given(this.guildRepository.findByGuildId(anyString())).willReturn(new Guild());
 
         //when
-        boolean result = this.guildService.updateBotPresentToFalse(anyString());
+        boolean result = this.sut.updateBotPresentToFalse(anyString());
 
         //then
         assertThat(result, is(true));
@@ -99,7 +106,7 @@ class GuildServiceImplTest {
         given(this.guildRepository.findByGuildId(anyString())).willReturn(null);
 
         //when
-        boolean result = this.guildService.updateBotPresentToFalse(anyString());
+        boolean result = this.sut.updateBotPresentToFalse(anyString());
 
         //then
         assertThat(result, is(false));
@@ -112,9 +119,42 @@ class GuildServiceImplTest {
         given(this.guildRepository.findByGuildId(anyString())).willReturn(guild);
 
         //when
-        this.guildService.updateBotPresentToFalse(anyString());
+        this.sut.updateBotPresentToFalse(anyString());
 
         //then
         then(guild).should(times(1)).setBotPresent(false);
+    }
+
+    @Test
+    void getAllPrefixesForBotsInServersShouldReturnStringStringMapWithValuesWhenThereAreRecordsInDb() {
+        //given
+        String guildId1 = "1234";
+        String botPrefix1 = "!gp";
+        String guildId2 = "4321";
+        String botPrefix2 = "$";
+        GuildPrefix guild1 = new GuildPrefix(guildId1, botPrefix1);
+        GuildPrefix guild2 = new GuildPrefix(guildId2, botPrefix2);
+        List<GuildPrefix> guildPrefixesList = List.of(guild1, guild2);
+        given(this.guildRepository.findAllByBotPresentIsTrue()).willReturn(guildPrefixesList);
+
+        //when
+        Map<String, String> result = this.sut.getAllPrefixesForBotsInServers();
+
+        //then
+        assertThat(result.isEmpty(), is(false));
+        assertThat(result.containsKey(guildId1), is(true));
+        assertThat(result.containsKey(guildId2), is(true));
+    }
+
+    @Test
+    void getAllPrefixesForBotsInServersShouldReturnEmptyStringStringMapWhenThereAreNoRecordsInDb() {
+        //given
+        given(this.guildRepository.findAllByBotPresentIsTrue()).willReturn(Collections.<GuildPrefix>emptyList());
+
+        //when
+        Map<String, String> result = this.sut.getAllPrefixesForBotsInServers();
+
+        //then
+        assertThat(result.isEmpty(), is(true));
     }
 }

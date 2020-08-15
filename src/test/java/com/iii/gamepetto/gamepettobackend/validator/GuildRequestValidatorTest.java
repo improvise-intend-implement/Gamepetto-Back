@@ -1,7 +1,7 @@
 package com.iii.gamepetto.gamepettobackend.validator;
 
 
-import com.iii.gamepetto.gamepettobackend.transferobject.GuildRequest;
+import com.iii.gamepetto.gamepettobackend.transferobject.request.GuildRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.validation.BeanPropertyBindingResult;
