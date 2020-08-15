@@ -1,11 +1,16 @@
 package com.iii.gamepetto.gamepettobackend.service;
 
 import com.iii.gamepetto.gamepettobackend.model.Guild;
+import com.iii.gamepetto.gamepettobackend.transferobject.GuildPrefix;
 import com.iii.gamepetto.gamepettobackend.repository.GuildRepository;
-import com.iii.gamepetto.gamepettobackend.transferobject.GuildRequest;
-import com.iii.gamepetto.gamepettobackend.transferobject.GuildResponse;
+import com.iii.gamepetto.gamepettobackend.transferobject.request.GuildRequest;
+import com.iii.gamepetto.gamepettobackend.transferobject.response.GuildResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class GuildServiceImpl implements GuildService {
@@ -22,12 +27,12 @@ public class GuildServiceImpl implements GuildService {
     public GuildResponse saveOrUpdate(GuildRequest guildRequest) {
         Guild guild = this.guildRepository.findByGuildId(guildRequest.getGuildId());
         if (guild == null) {
-            guild = modelMapper.map(guildRequest, Guild.class);
+            guild = this.modelMapper.map(guildRequest, Guild.class);
         } else {
             guild.setBotPresent(true);
         }
         guild = this.guildRepository.save(guild);
-        return modelMapper.map(guild, GuildResponse.class);
+        return this.modelMapper.map(guild, GuildResponse.class);
     }
 
     @Override
@@ -38,5 +43,11 @@ public class GuildServiceImpl implements GuildService {
         }
         guild.setBotPresent(false);
         return true;
+    }
+
+    @Override
+    public Map<String, String> getAllPrefixesForBotsInServers() {
+        List<GuildPrefix> guildPrefixList = this.guildRepository.findAllByBotPresentIsTrue();
+        return guildPrefixList.stream().collect(Collectors.toMap(GuildPrefix::getGuildId, GuildPrefix::getBotPrefix));
     }
 }

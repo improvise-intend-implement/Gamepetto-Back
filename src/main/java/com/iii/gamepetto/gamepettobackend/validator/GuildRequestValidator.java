@@ -1,6 +1,6 @@
 package com.iii.gamepetto.gamepettobackend.validator;
 
-import com.iii.gamepetto.gamepettobackend.transferobject.GuildRequest;
+import com.iii.gamepetto.gamepettobackend.transferobject.request.GuildRequest;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 

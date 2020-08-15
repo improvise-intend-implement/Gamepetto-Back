@@ -2,8 +2,8 @@ package com.iii.gamepetto.gamepettobackend.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iii.gamepetto.gamepettobackend.service.GuildService;
-import com.iii.gamepetto.gamepettobackend.transferobject.GuildRequest;
-import com.iii.gamepetto.gamepettobackend.transferobject.GuildResponse;
+import com.iii.gamepetto.gamepettobackend.transferobject.request.GuildRequest;
+import com.iii.gamepetto.gamepettobackend.transferobject.response.GuildResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -13,14 +13,15 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.util.Collections;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class GuildControllerTest {
@@ -93,6 +94,18 @@ class GuildControllerTest {
         this.mockMvc.perform(delete("/guild/1234"))
                 .andExpect(status().isNotFound());
         then(this.guildService).should(times(1)).updateBotPresentToFalse(anyString());
+    }
+
+    @Test
+    void getAllActivePrefixesShouldReturnOkStatus() throws Exception {
+        //given
+        given(this.guildService.getAllPrefixesForBotsInServers()).willReturn(Collections.<String, String>emptyMap());
+
+        //when
+        //then
+        this.mockMvc.perform(get("/guild/prefix"))
+                .andExpect(status().isOk());
+        then(this.guildService).should(times(1)).getAllPrefixesForBotsInServers();
     }
 
 }
