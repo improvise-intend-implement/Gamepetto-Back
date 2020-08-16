@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -34,4 +35,10 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         return new ResponseEntity<>(errorDetails, new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(GamepettoEntityNotFoundException.class)
+    public ResponseEntity<Object> handleGamepettoEntityNotFound(GamepettoEntityNotFoundException ex) {
+        ErrorDetails errorDetails = new ErrorDetails(new Date(), "Entity couldn't be found");
+        errorDetails.addFieldError(ex.getFieldName(), ex.getValue(), ex.getMessage());
+        return new ResponseEntity<>(errorDetails, new HttpHeaders(), HttpStatus.NOT_FOUND);
+    }
 }
