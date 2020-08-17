@@ -1,6 +1,5 @@
 package com.iii.gamepetto.gamepettobackend.service;
 
-import com.iii.gamepetto.gamepettobackend.transferobject.GuildPrefix;
 import com.iii.gamepetto.gamepettobackend.transferobject.request.GuildRequest;
 import com.iii.gamepetto.gamepettobackend.transferobject.response.GuildResponse;
 
@@ -14,5 +13,5 @@ public interface GuildService {
 
     Map<String, String> getAllPrefixesForBotsInServers();
 
-    void updateGuildPrefix(GuildPrefix guildPrefix);
+    void updateGuildPrefix(String guildId, String botPrefix);
 }

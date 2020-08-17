@@ -1,5 +1,6 @@
 package com.iii.gamepetto.gamepettobackend.service;
 
+import com.iii.gamepetto.gamepettobackend.exception.GamepettoEntityNotFoundException;
 import com.iii.gamepetto.gamepettobackend.model.Guild;
 import com.iii.gamepetto.gamepettobackend.repository.GuildRepository;
 import com.iii.gamepetto.gamepettobackend.transferobject.GuildPrefix;
@@ -14,13 +15,12 @@ import org.mockito.Spy;
 import org.modelmapper.ModelMapper;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
@@ -156,5 +156,48 @@ class GuildServiceImplTest {
 
         //then
         assertThat(result.isEmpty(), is(true));
+    }
+
+    @Test
+    void updateGuildPrefixShouldSaveGuildWhenEntityExists() {
+        //given
+        String guildId = "1";
+        String botPrefix = "!gp";
+        given(this.guildRepository.findByGuildId(guildId)).willReturn(new Guild());
+
+        //when
+        this.sut.updateGuildPrefix(guildId, botPrefix);
+
+        //then
+        then(this.guildRepository).should(times(1)).save(any(Guild.class));
+    }
+
+    @Test
+    void updateGuildPrefixShouldThrowExceptionWhenEntityDoesntExist() {
+        assertThrows(GamepettoEntityNotFoundException.class, () -> {
+            //given
+            String guildId = "1";
+            String botPrefix = "!gp";
+            given(this.guildRepository.findByGuildId(anyString())).willReturn(null);
+
+            //when
+            //then
+            this.sut.updateGuildPrefix(guildId, botPrefix);
+        });
+    }
+
+    @Test
+    void updateGuildPrefixShouldSetBotPrefixOnFoundEntity() {
+        //given
+        String guildId = "1";
+        String botPrefix = "!xd";
+        Guild guild = mock(Guild.class);
+        given(this.guildRepository.findByGuildId(guildId)).willReturn(guild);
+
+        //when
+        this.sut.updateGuildPrefix(guildId, botPrefix);
+
+        //then
+        then(guild).should(times(1)).setBotPrefix(botPrefix);
     }
 }

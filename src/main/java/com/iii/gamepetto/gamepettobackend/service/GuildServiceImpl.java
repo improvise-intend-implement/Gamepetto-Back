@@ -53,12 +53,12 @@ public class GuildServiceImpl implements GuildService {
     }
 
 	@Override
-	public void updateGuildPrefix(GuildPrefix guildPrefix) {
-		Guild guild = this.guildRepository.findByGuildId(guildPrefix.getGuildId());
+	public void updateGuildPrefix(String guildId, String botPrefix) {
+		Guild guild = this.guildRepository.findByGuildId(guildId);
 		if (guild == null) {
-		    throw new GamepettoEntityNotFoundException("Guild entity couldn't be found", "guildId", guildPrefix.getGuildId());
+		    throw new GamepettoEntityNotFoundException("Guild entity couldn't be found", "guildId", guildId);
         }
-		guild.setBotPrefix(guildPrefix.getBotPrefix());
+		guild.setBotPrefix(botPrefix);
 		this.guildRepository.save(guild);
 	}
 }

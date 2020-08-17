@@ -1,10 +1,10 @@
 package com.iii.gamepetto.gamepettobackend.controller;
 
 import com.iii.gamepetto.gamepettobackend.service.GuildService;
-import com.iii.gamepetto.gamepettobackend.transferobject.GuildPrefix;
+import com.iii.gamepetto.gamepettobackend.transferobject.request.BotPrefix;
 import com.iii.gamepetto.gamepettobackend.transferobject.request.GuildRequest;
 import com.iii.gamepetto.gamepettobackend.transferobject.response.GuildResponse;
-import com.iii.gamepetto.gamepettobackend.validator.GuildPrefixValidator;
+import com.iii.gamepetto.gamepettobackend.validator.BotPrefixValidator;
 import com.iii.gamepetto.gamepettobackend.validator.GuildRequestValidator;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,9 +29,9 @@ public class GuildController {
         binder.addValidators(new GuildRequestValidator());
     }
 
-    @InitBinder("guildPrefix")
+    @InitBinder("botPrefix")
     public void initGuildPrefixBinder(WebDataBinder binder) {
-        binder.addValidators(new GuildPrefixValidator());
+        binder.addValidators(new BotPrefixValidator());
     }
 
     @PostMapping
@@ -55,9 +55,9 @@ public class GuildController {
         return new ResponseEntity<>(prefixesMap, HttpStatus.OK);
     }
 
-    @PatchMapping(value = "/prefix")
-    public ResponseEntity<?> updateGuildPrefix(@Valid @RequestBody final GuildPrefix guildPrefix) {
-        this.guildService.updateGuildPrefix(guildPrefix);
+    @PatchMapping(value = "{id}/prefix")
+    public ResponseEntity<?> updateGuildPrefix(@PathVariable String id, @Valid @RequestBody final BotPrefix botPrefix) {
+        this.guildService.updateGuildPrefix(id, botPrefix.getBotPrefix());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

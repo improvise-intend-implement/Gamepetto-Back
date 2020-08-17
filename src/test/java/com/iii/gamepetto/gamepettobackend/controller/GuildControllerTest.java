@@ -2,6 +2,7 @@ package com.iii.gamepetto.gamepettobackend.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iii.gamepetto.gamepettobackend.service.GuildService;
+import com.iii.gamepetto.gamepettobackend.transferobject.request.BotPrefix;
 import com.iii.gamepetto.gamepettobackend.transferobject.request.GuildRequest;
 import com.iii.gamepetto.gamepettobackend.transferobject.response.GuildResponse;
 import org.junit.jupiter.api.BeforeEach;
@@ -108,4 +109,18 @@ class GuildControllerTest {
         then(this.guildService).should(times(1)).getAllPrefixesForBotsInServers();
     }
 
+    @Test
+    void updateGuildPrefixShouldReturnOkStatusWhenEverythingIsCorrect() throws Exception {
+        //given
+        BotPrefix request = new BotPrefix();
+        request.setBotPrefix("!gp");
+
+        //when
+        //then
+        this.mockMvc.perform(patch("/guild/1/prefix")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(this.objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk());
+        then(this.guildService).should(times(1)).updateGuildPrefix(anyString(), anyString());
+    }
 }
