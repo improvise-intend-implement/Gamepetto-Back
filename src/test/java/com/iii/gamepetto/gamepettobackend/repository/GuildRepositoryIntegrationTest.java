@@ -1,7 +1,7 @@
 package com.iii.gamepetto.gamepettobackend.repository;
 
 import com.iii.gamepetto.gamepettobackend.model.Guild;
-import com.iii.gamepetto.gamepettobackend.transferobject.GuildPrefix;
+import com.iii.gamepetto.gamepettobackend.transferobject.response.GuildPrefix;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

@@ -12,4 +12,6 @@ public interface GuildService {
     boolean updateBotPresentToFalse(String guildId);
 
     Map<String, String> getAllPrefixesForBotsInServers();
+
+    void updateGuildPrefix(String guildId, String botPrefix);
 }

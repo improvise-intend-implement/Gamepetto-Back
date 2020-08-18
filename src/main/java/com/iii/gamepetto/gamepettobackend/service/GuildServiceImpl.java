@@ -1,7 +1,8 @@
 package com.iii.gamepetto.gamepettobackend.service;
 
+import com.iii.gamepetto.gamepettobackend.exception.GamepettoEntityNotFoundException;
 import com.iii.gamepetto.gamepettobackend.model.Guild;
-import com.iii.gamepetto.gamepettobackend.transferobject.GuildPrefix;
+import com.iii.gamepetto.gamepettobackend.transferobject.response.GuildPrefix;
 import com.iii.gamepetto.gamepettobackend.repository.GuildRepository;
 import com.iii.gamepetto.gamepettobackend.transferobject.request.GuildRequest;
 import com.iii.gamepetto.gamepettobackend.transferobject.response.GuildResponse;
@@ -50,4 +51,14 @@ public class GuildServiceImpl implements GuildService {
         List<GuildPrefix> guildPrefixList = this.guildRepository.findAllByBotPresentIsTrue();
         return guildPrefixList.stream().collect(Collectors.toMap(GuildPrefix::getGuildId, GuildPrefix::getBotPrefix));
     }
+
+	@Override
+	public void updateGuildPrefix(String guildId, String botPrefix) {
+		Guild guild = this.guildRepository.findByGuildId(guildId);
+		if (guild == null) {
+		    throw new GamepettoEntityNotFoundException("Guild entity couldn't be found", "guildId", guildId);
+        }
+		guild.setBotPrefix(botPrefix);
+		this.guildRepository.save(guild);
+	}
 }

@@ -1,7 +1,11 @@
 package com.iii.gamepetto.gamepettobackend.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.iii.gamepetto.gamepettobackend.configuration.MessageSourceConfig;
+import com.iii.gamepetto.gamepettobackend.exception.GamepettoEntityNotFoundException;
+import com.iii.gamepetto.gamepettobackend.exception.RestResponseEntityExceptionHandler;
 import com.iii.gamepetto.gamepettobackend.service.GuildService;
+import com.iii.gamepetto.gamepettobackend.transferobject.request.BotPrefix;
 import com.iii.gamepetto.gamepettobackend.transferobject.request.GuildRequest;
 import com.iii.gamepetto.gamepettobackend.transferobject.response.GuildResponse;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,6 +23,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
+import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -27,6 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class GuildControllerTest {
 
     final ObjectMapper objectMapper = new ObjectMapper();
+    final MessageSourceConfig messageSourceConfig = new MessageSourceConfig();
     MockMvc mockMvc;
     @Mock
     GuildService guildService;
@@ -36,7 +42,8 @@ class GuildControllerTest {
     @BeforeEach
     void setup() {
         MockitoAnnotations.initMocks(this);
-        this.mockMvc = MockMvcBuilders.standaloneSetup(this.sut).build();
+        RestResponseEntityExceptionHandler exceptionHandler = new RestResponseEntityExceptionHandler(messageSourceConfig.messageSource());
+        this.mockMvc = MockMvcBuilders.standaloneSetup(this.sut, exceptionHandler).build();
     }
 
     @Test
@@ -108,4 +115,49 @@ class GuildControllerTest {
         then(this.guildService).should(times(1)).getAllPrefixesForBotsInServers();
     }
 
+    @Test
+    void updateGuildPrefixShouldReturnOkStatusWhenEverythingIsCorrect() throws Exception {
+        //given
+        BotPrefix request = new BotPrefix();
+        request.setBotPrefix("!gp");
+
+        //when
+        //then
+        this.mockMvc.perform(patch("/guild/1/prefix")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(this.objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk());
+        then(this.guildService).should(times(1)).updateGuildPrefix(anyString(), anyString());
+    }
+
+    @Test
+    void updateGuildPrefixShouldReturnNotFoundStatusWhenGamepettoEntityNotFoundExceptionIsThrown() throws Exception {
+        //given
+        BotPrefix request = new BotPrefix();
+        request.setBotPrefix("!gp");
+        willThrow(GamepettoEntityNotFoundException.class)
+                .given(this.guildService)
+                .updateGuildPrefix(anyString(), anyString());
+
+        //when
+        //then
+        this.mockMvc.perform(patch("/guild/1/prefix")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(this.objectMapper.writeValueAsString(request)))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void updateGuildPrefixShouldReturnBadRequestStatusWhenRequestIsNotValid() throws Exception {
+        //given
+        BotPrefix request = new BotPrefix();
+        request.setBotPrefix("");
+
+        //when
+        //then
+        this.mockMvc.perform(patch("/guild/1/prefix")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(this.objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
+    }
 }

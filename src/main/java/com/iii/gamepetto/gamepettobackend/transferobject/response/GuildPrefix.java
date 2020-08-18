@@ -1,7 +1,10 @@
-package com.iii.gamepetto.gamepettobackend.transferobject;
+package com.iii.gamepetto.gamepettobackend.transferobject.response;
 
-public class GuildPrefix {
+import java.io.Serializable;
 
+public class GuildPrefix implements Serializable {
+
+	private final static long serialVersionUID = 2745352938917729819L;
 	private String guildId;
 	private String botPrefix;
 
