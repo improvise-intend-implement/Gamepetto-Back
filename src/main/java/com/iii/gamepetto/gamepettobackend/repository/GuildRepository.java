@@ -1,7 +1,7 @@
 package com.iii.gamepetto.gamepettobackend.repository;
 
 import com.iii.gamepetto.gamepettobackend.model.Guild;
-import com.iii.gamepetto.gamepettobackend.transferobject.GuildPrefix;
+import com.iii.gamepetto.gamepettobackend.transferobject.response.GuildPrefix;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

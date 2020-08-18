@@ -1,10 +1,12 @@
 package com.iii.gamepetto.gamepettobackend.validator;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class ErrorDetails {
+public class ErrorDetails implements Serializable {
+
     private final List<FieldError> fieldErrors = new ArrayList<>();
     private Date timestamp;
     private String message;

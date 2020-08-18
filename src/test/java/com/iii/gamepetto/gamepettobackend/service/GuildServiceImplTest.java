@@ -3,7 +3,7 @@ package com.iii.gamepetto.gamepettobackend.service;
 import com.iii.gamepetto.gamepettobackend.exception.GamepettoEntityNotFoundException;
 import com.iii.gamepetto.gamepettobackend.model.Guild;
 import com.iii.gamepetto.gamepettobackend.repository.GuildRepository;
-import com.iii.gamepetto.gamepettobackend.transferobject.GuildPrefix;
+import com.iii.gamepetto.gamepettobackend.transferobject.response.GuildPrefix;
 import com.iii.gamepetto.gamepettobackend.transferobject.request.GuildRequest;
 import com.iii.gamepetto.gamepettobackend.transferobject.response.GuildResponse;
 import org.junit.jupiter.api.BeforeEach;
