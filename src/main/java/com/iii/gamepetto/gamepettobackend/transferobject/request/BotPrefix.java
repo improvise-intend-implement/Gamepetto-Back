@@ -9,6 +9,6 @@ public class BotPrefix {
 	}
 
 	public void setBotPrefix(String botPrefix) {
-		this.botPrefix = botPrefix;
+		this.botPrefix = botPrefix.trim();
 	}
 }
