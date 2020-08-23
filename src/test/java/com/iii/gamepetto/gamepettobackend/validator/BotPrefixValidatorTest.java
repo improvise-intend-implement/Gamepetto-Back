@@ -18,7 +18,7 @@ class BotPrefixValidatorTest {
 	BotPrefixValidator sut;
 	BotPrefix botPrefix;
 	Errors errors;
-	Integer botPrefixMaxLength = 8;
+	Integer botPrefixMaxLength = 3;
 
 	@BeforeEach
 	void setup() {

@@ -31,6 +31,7 @@ public class GuildServiceImpl implements GuildService {
             guild = this.modelMapper.map(guildRequest, Guild.class);
         } else {
             guild.setBotPresent(true);
+            guild.setBotPrefix("?");
         }
         guild = this.guildRepository.save(guild);
         return this.modelMapper.map(guild, GuildResponse.class);

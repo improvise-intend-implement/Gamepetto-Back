@@ -28,7 +28,7 @@ public class Guild implements Serializable {
     @Column(columnDefinition = "BOOLEAN DEFAULT TRUE NOT NULL")
     private Boolean botPresent;
     @Generated(GenerationTime.INSERT)
-    @Column(columnDefinition = "VARCHAR(8) DEFAULT '!gp'")
+    @Column(columnDefinition = "VARCHAR(3) DEFAULT '?'")
     private String botPrefix;
 
     public Long getId() {
