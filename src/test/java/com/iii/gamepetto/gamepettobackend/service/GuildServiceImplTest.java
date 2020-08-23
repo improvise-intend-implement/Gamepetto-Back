@@ -79,13 +79,28 @@ class GuildServiceImplTest {
         //given
         Guild guild = mock(Guild.class);
         given(this.guildRepository.findByGuildId(any())).willReturn(guild);
-        given(this.guildRepository.save(any(Guild.class))).willReturn(new Guild());
+        given(this.guildRepository.save(any(Guild.class))).willReturn(guild);
 
         //when
         this.sut.saveOrUpdate(new GuildRequest());
 
         //then
         then(guild).should(times(1)).setBotPresent(true);
+    }
+
+    @Test
+    void saveOrUpdateShouldSetBotPrefixToDefaultWhenServerExistsInDb() {
+        //given
+        String defaultPrefix = "?";
+        Guild guild = mock(Guild.class);
+        given(this.guildRepository.findByGuildId(any())).willReturn(guild);
+        given(this.guildRepository.save(any(Guild.class))).willReturn(guild);
+
+        //when
+        this.sut.saveOrUpdate(new GuildRequest());
+
+        //then
+        then(guild).should(times(1)).setBotPrefix(defaultPrefix);
     }
 
     @Test

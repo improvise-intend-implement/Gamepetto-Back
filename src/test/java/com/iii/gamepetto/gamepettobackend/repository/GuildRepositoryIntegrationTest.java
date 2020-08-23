@@ -12,9 +12,10 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.emptyOrNullString;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
-import static org.mockito.Matchers.isNull;
 
 @DataJpaTest
 class GuildRepositoryIntegrationTest {
@@ -83,6 +84,18 @@ class GuildRepositoryIntegrationTest {
 
 		//then
 		assertThat(result.size(), is(2));
+	}
+
+	@Test
+	void addedGuildHasDefaultPrefixSet() {
+		//given
+		String defaultPrefix = "?";
+
+		//when
+		String result = this.sut.findByGuildId("1").getBotPrefix();
+
+		//then
+		assertThat(result, is(defaultPrefix));
 	}
 
 }

@@ -16,7 +16,7 @@ public class BotPrefixValidator implements Validator {
 		BotPrefix botPrefix = (BotPrefix) o;
 		if (botPrefix.getBotPrefix() == null || botPrefix.getBotPrefix().trim().length() == 0) {
 			errors.rejectValue("botPrefix", "validator.Guild.botPrefix.empty");
-		} else if (botPrefix.getBotPrefix().length() > 8) {
+		} else if (botPrefix.getBotPrefix().length() > 3) {
 			errors.rejectValue("botPrefix", "validator.Guild.botPrefix.length.max");
 		}
 	}
