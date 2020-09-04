@@ -1,7 +1,7 @@
 package com.iii.gamepetto.gamepettobackend.service;
 
 import com.iii.gamepetto.gamepettobackend.exception.GamepettoEntityNotFoundException;
-import com.iii.gamepetto.gamepettobackend.model.Guild;
+import com.iii.gamepetto.gamepettobackend.model.GuildEntity;
 import com.iii.gamepetto.gamepettobackend.repository.GuildRepository;
 import com.iii.gamepetto.gamepettobackend.transferobject.response.GuildPrefix;
 import com.iii.gamepetto.gamepettobackend.transferobject.request.GuildRequest;
@@ -46,67 +46,67 @@ class GuildServiceImplTest {
     void saveOrUpdateShouldCallSaveMethodFromRepository() {
         //given
         given(this.guildRepository.findByGuildId(anyString())).willReturn(null);
-        given(this.guildRepository.save(any(Guild.class))).willReturn(new Guild());
+        given(this.guildRepository.save(any(GuildEntity.class))).willReturn(new GuildEntity());
 
         //when
         this.sut.saveOrUpdate(new GuildRequest());
 
         //then
-        then(this.guildRepository).should(times(1)).save(any(Guild.class));
+        then(this.guildRepository).should(times(1)).save(any(GuildEntity.class));
     }
 
     @Test
     void saveOrUpdateShouldReturnAppropriateObject() {
         //given
-        Guild guild = new Guild();
-        guild.setId(1L);
-        guild.setGuildId("testowy");
-        guild.setBotPrefix("!gp");
-        given(this.guildRepository.findByGuildId(any())).willReturn(guild);
-        given(this.guildRepository.save(any(Guild.class))).willReturn(guild);
+        GuildEntity guildEntity = new GuildEntity();
+        guildEntity.setId(1L);
+        guildEntity.setGuildId("testowy");
+        guildEntity.setBotPrefix("!gp");
+        given(this.guildRepository.findByGuildId(any())).willReturn(guildEntity);
+        given(this.guildRepository.save(any(GuildEntity.class))).willReturn(guildEntity);
 
         //when
         GuildResponse result = this.sut.saveOrUpdate(new GuildRequest());
 
         //then
-        assertThat(result.getId(), is(guild.getId()));
-        assertThat(result.getGuildId(), is(guild.getGuildId()));
-        assertThat(result.getBotPrefix(), is(guild.getBotPrefix()));
+        assertThat(result.getId(), is(guildEntity.getId()));
+        assertThat(result.getGuildId(), is(guildEntity.getGuildId()));
+        assertThat(result.getBotPrefix(), is(guildEntity.getBotPrefix()));
     }
 
     @Test
     void saveOrUpdateShouldSetBotPresentToTrueWhenServerExistsInDb() {
         //given
-        Guild guild = mock(Guild.class);
-        given(this.guildRepository.findByGuildId(any())).willReturn(guild);
-        given(this.guildRepository.save(any(Guild.class))).willReturn(guild);
+        GuildEntity guildEntity = mock(GuildEntity.class);
+        given(this.guildRepository.findByGuildId(any())).willReturn(guildEntity);
+        given(this.guildRepository.save(any(GuildEntity.class))).willReturn(guildEntity);
 
         //when
         this.sut.saveOrUpdate(new GuildRequest());
 
         //then
-        then(guild).should(times(1)).setBotPresent(true);
+        then(guildEntity).should(times(1)).setBotPresent(true);
     }
 
     @Test
     void saveOrUpdateShouldSetBotPrefixToDefaultWhenServerExistsInDb() {
         //given
         String defaultPrefix = "?";
-        Guild guild = mock(Guild.class);
-        given(this.guildRepository.findByGuildId(any())).willReturn(guild);
-        given(this.guildRepository.save(any(Guild.class))).willReturn(guild);
+        GuildEntity guildEntity = mock(GuildEntity.class);
+        given(this.guildRepository.findByGuildId(any())).willReturn(guildEntity);
+        given(this.guildRepository.save(any(GuildEntity.class))).willReturn(guildEntity);
 
         //when
         this.sut.saveOrUpdate(new GuildRequest());
 
         //then
-        then(guild).should(times(1)).setBotPrefix(defaultPrefix);
+        then(guildEntity).should(times(1)).setBotPrefix(defaultPrefix);
     }
 
     @Test
     void updateBotPresentToFalseShouldReturnTrueWhenGuildExists() {
         //given
-        given(this.guildRepository.findByGuildId(anyString())).willReturn(new Guild());
+        given(this.guildRepository.findByGuildId(anyString())).willReturn(new GuildEntity());
 
         //when
         boolean result = this.sut.updateBotPresentToFalse(anyString());
@@ -130,14 +130,14 @@ class GuildServiceImplTest {
     @Test
     void updateBotPresentToFalseShouldSetThePropertyToFalseWhenGuildExists() {
         //given
-        Guild guild = mock(Guild.class);
-        given(this.guildRepository.findByGuildId(anyString())).willReturn(guild);
+        GuildEntity guildEntity = mock(GuildEntity.class);
+        given(this.guildRepository.findByGuildId(anyString())).willReturn(guildEntity);
 
         //when
         this.sut.updateBotPresentToFalse(anyString());
 
         //then
-        then(guild).should(times(1)).setBotPresent(false);
+        then(guildEntity).should(times(1)).setBotPresent(false);
     }
 
     @Test
@@ -178,13 +178,13 @@ class GuildServiceImplTest {
         //given
         String guildId = "1";
         String botPrefix = "!gp";
-        given(this.guildRepository.findByGuildId(guildId)).willReturn(new Guild());
+        given(this.guildRepository.findByGuildId(guildId)).willReturn(new GuildEntity());
 
         //when
         this.sut.updateGuildPrefix(guildId, botPrefix);
 
         //then
-        then(this.guildRepository).should(times(1)).save(any(Guild.class));
+        then(this.guildRepository).should(times(1)).save(any(GuildEntity.class));
     }
 
     @Test
@@ -206,13 +206,13 @@ class GuildServiceImplTest {
         //given
         String guildId = "1";
         String botPrefix = "!xd";
-        Guild guild = mock(Guild.class);
-        given(this.guildRepository.findByGuildId(guildId)).willReturn(guild);
+        GuildEntity guildEntity = mock(GuildEntity.class);
+        given(this.guildRepository.findByGuildId(guildId)).willReturn(guildEntity);
 
         //when
         this.sut.updateGuildPrefix(guildId, botPrefix);
 
         //then
-        then(guild).should(times(1)).setBotPrefix(botPrefix);
+        then(guildEntity).should(times(1)).setBotPrefix(botPrefix);
     }
 }

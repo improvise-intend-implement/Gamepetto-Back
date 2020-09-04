@@ -8,11 +8,13 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
 
 @Entity
+@Table(name = "Guild")
 @DynamicInsert
-public class Guild implements Serializable {
+public class GuildEntity implements Serializable {
 
     private static final long serialVersionUID = 3205106693431767441L;
 
