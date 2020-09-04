@@ -8,9 +8,11 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
 
 @Entity
+@Table(name = "Guild")
 @DynamicInsert
 public class GuildEntity implements Serializable {
 
