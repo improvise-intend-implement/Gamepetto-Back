@@ -62,4 +62,9 @@ public class GuildServiceImpl implements GuildService {
 		guildEntity.setBotPrefix(botPrefix);
 		this.guildRepository.save(guildEntity);
 	}
+
+    @Override
+    public GuildEntity getGuildEntity(String guildId) {
+        return this.guildRepository.findByGuildId(guildId);
+    }
 }
