@@ -6,11 +6,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface GuildRepository extends JpaRepository<GuildEntity, Long> {
 
-    GuildEntity findByGuildId(String guildId);
+    Optional<GuildEntity> findByGuildId(String guildId);
 
     List<GuildPrefix> findAllByBotPresentIsTrue();
 }

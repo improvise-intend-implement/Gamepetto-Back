@@ -65,7 +65,7 @@ class GuildRepositoryIntegrationTest {
 	void findByGuildIdShouldReturnGuildWhenExistsInDb() {
 		//given
 		//when
-		GuildEntity result = this.sut.findByGuildId("1");
+		GuildEntity result = this.sut.findByGuildId("1").orElse(null);
 
 		//then
 		Assertions.assertNotNull(result);
@@ -92,7 +92,7 @@ class GuildRepositoryIntegrationTest {
 		String defaultPrefix = "?";
 
 		//when
-		String result = this.sut.findByGuildId("1").getBotPrefix();
+		String result = this.sut.findByGuildId("1").map(GuildEntity::getBotPrefix).orElse(null);
 
 		//then
 		assertThat(result, is(defaultPrefix));
