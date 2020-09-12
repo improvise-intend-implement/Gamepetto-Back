@@ -46,7 +46,7 @@ class GuildServiceImplTest {
     @Test
     void saveOrUpdateShouldCallSaveMethodFromRepository() {
         //given
-        given(this.guildRepository.findByGuildId(anyString())).willReturn(null);
+        given(this.guildRepository.findById(anyString())).willReturn(null);
         given(this.guildRepository.save(any(GuildEntity.class))).willReturn(new GuildEntity());
 
         //when
@@ -60,10 +60,9 @@ class GuildServiceImplTest {
     void saveOrUpdateShouldReturnAppropriateObject() {
         //given
         GuildEntity guildEntity = new GuildEntity();
-        guildEntity.setId(1L);
-        guildEntity.setGuildId("testowy");
+        guildEntity.setId("testowy");
         guildEntity.setBotPrefix("!gp");
-        given(this.guildRepository.findByGuildId(any())).willReturn(Optional.of(guildEntity));
+        given(this.guildRepository.findById(any())).willReturn(Optional.of(guildEntity));
         given(this.guildRepository.save(any(GuildEntity.class))).willReturn(guildEntity);
 
         //when
@@ -71,7 +70,6 @@ class GuildServiceImplTest {
 
         //then
         assertThat(result.getId(), is(guildEntity.getId()));
-        assertThat(result.getGuildId(), is(guildEntity.getGuildId()));
         assertThat(result.getBotPrefix(), is(guildEntity.getBotPrefix()));
     }
 
@@ -79,7 +77,7 @@ class GuildServiceImplTest {
     void saveOrUpdateShouldSetBotPresentToTrueWhenServerExistsInDb() {
         //given
         GuildEntity guildEntity = mock(GuildEntity.class);
-        given(this.guildRepository.findByGuildId(any())).willReturn(Optional.of(guildEntity));
+        given(this.guildRepository.findById(any())).willReturn(Optional.of(guildEntity));
         given(this.guildRepository.save(any(GuildEntity.class))).willReturn(guildEntity);
 
         //when
@@ -94,7 +92,7 @@ class GuildServiceImplTest {
         //given
         String defaultPrefix = "?";
         GuildEntity guildEntity = mock(GuildEntity.class);
-        given(this.guildRepository.findByGuildId(any())).willReturn(Optional.of(guildEntity));
+        given(this.guildRepository.findById(any())).willReturn(Optional.of(guildEntity));
         given(this.guildRepository.save(any(GuildEntity.class))).willReturn(guildEntity);
 
         //when
@@ -107,7 +105,7 @@ class GuildServiceImplTest {
     @Test
     void updateBotPresentToFalseShouldReturnTrueWhenGuildExists() {
         //given
-        given(this.guildRepository.findByGuildId(anyString())).willReturn(Optional.of(new GuildEntity()));
+        given(this.guildRepository.findById(anyString())).willReturn(Optional.of(new GuildEntity()));
 
         //when
         boolean result = this.sut.updateBotPresentToFalse(anyString());
@@ -119,7 +117,7 @@ class GuildServiceImplTest {
     @Test
     void updateBotPresentToFalseShouldCallSaveToTheRepository() {
         //given
-        given(this.guildRepository.findByGuildId(anyString())).willReturn(Optional.of(new GuildEntity()));
+        given(this.guildRepository.findById(anyString())).willReturn(Optional.of(new GuildEntity()));
 
         //when
         boolean result = this.sut.updateBotPresentToFalse(anyString());
@@ -131,7 +129,7 @@ class GuildServiceImplTest {
     @Test
     void updateBotPresentToFalseShouldReturnFalseWhenGuildDoesntExist() {
         //given
-        given(this.guildRepository.findByGuildId(anyString())).willReturn(Optional.empty());
+        given(this.guildRepository.findById(anyString())).willReturn(Optional.empty());
 
         //when
         boolean result = this.sut.updateBotPresentToFalse(anyString());
@@ -144,7 +142,7 @@ class GuildServiceImplTest {
     void updateBotPresentToFalseShouldSetThePropertyToFalseWhenGuildExists() {
         //given
         GuildEntity guildEntity = mock(GuildEntity.class);
-        given(this.guildRepository.findByGuildId(anyString())).willReturn(Optional.of(guildEntity));
+        given(this.guildRepository.findById(anyString())).willReturn(Optional.of(guildEntity));
 
         //when
         this.sut.updateBotPresentToFalse(anyString());
@@ -191,7 +189,7 @@ class GuildServiceImplTest {
         //given
         String guildId = "1";
         String botPrefix = "!gp";
-        given(this.guildRepository.findByGuildId(guildId)).willReturn(Optional.of(new GuildEntity()));
+        given(this.guildRepository.findById(guildId)).willReturn(Optional.of(new GuildEntity()));
 
         //when
         this.sut.updateGuildPrefix(guildId, botPrefix);
@@ -206,7 +204,7 @@ class GuildServiceImplTest {
             //given
             String guildId = "1";
             String botPrefix = "!gp";
-            given(this.guildRepository.findByGuildId(anyString())).willReturn(Optional.empty());
+            given(this.guildRepository.findById(anyString())).willReturn(Optional.empty());
 
             //when
             //then
@@ -220,7 +218,7 @@ class GuildServiceImplTest {
         String guildId = "1";
         String botPrefix = "!xd";
         GuildEntity guildEntity = mock(GuildEntity.class);
-        given(this.guildRepository.findByGuildId(guildId)).willReturn(Optional.of(guildEntity));
+        given(this.guildRepository.findById(guildId)).willReturn(Optional.of(guildEntity));
 
         //when
         this.sut.updateGuildPrefix(guildId, botPrefix);

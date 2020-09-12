@@ -50,7 +50,7 @@ class GuildControllerTest {
     void addGuildShouldReturnCreatedStatusWhenParameterIsValid() throws Exception {
         //given
         GuildRequest request = new GuildRequest();
-        request.setGuildId("123213");
+        request.setId("123213");
         request.setName("Testowy");
         given(this.guildService.saveOrUpdate(any(GuildRequest.class))).willReturn(new GuildResponse());
 
@@ -67,7 +67,7 @@ class GuildControllerTest {
     void addGuildShouldReturnBadRequestWhenParameterIsInvalid() throws Exception {
         //given
         GuildRequest request = new GuildRequest();
-        request.setGuildId("");
+        request.setId("");
         request.setName("");
 
         //when

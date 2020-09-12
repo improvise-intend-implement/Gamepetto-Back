@@ -28,7 +28,7 @@ public class GuildServiceImpl implements GuildService {
     @Override
     @Transactional
     public GuildResponse saveOrUpdate(GuildRequest guildRequest) {
-        GuildEntity guildEntity = this.guildRepository.findByGuildId(guildRequest.getGuildId()).orElse(null);
+        GuildEntity guildEntity = this.guildRepository.findById(guildRequest.getId()).orElse(null);
         if (guildEntity == null) {
             guildEntity = this.modelMapper.map(guildRequest, GuildEntity.class);
         } else {
@@ -42,7 +42,7 @@ public class GuildServiceImpl implements GuildService {
     @Override
     @Transactional
     public boolean updateBotPresentToFalse(String guildId) {
-        GuildEntity guildEntity = this.guildRepository.findByGuildId(guildId).orElse(null);
+        GuildEntity guildEntity = this.guildRepository.findById(guildId).orElse(null);
         if (guildEntity == null) {
             return false;
         }
@@ -54,14 +54,14 @@ public class GuildServiceImpl implements GuildService {
     @Override
     public Map<String, String> getAllPrefixesForBotsInServers() {
         List<GuildPrefix> guildPrefixList = this.guildRepository.findAllByBotPresentIsTrue();
-        return guildPrefixList.stream().collect(Collectors.toMap(GuildPrefix::getGuildId, GuildPrefix::getBotPrefix));
+        return guildPrefixList.stream().collect(Collectors.toMap(GuildPrefix::getId, GuildPrefix::getBotPrefix));
     }
 
 	@Override
     @Transactional
 	public void updateGuildPrefix(String guildId, String botPrefix) {
-		GuildEntity guildEntity = this.guildRepository.findByGuildId(guildId)
-                .orElseThrow(() -> new GamepettoEntityNotFoundException("Guild entity couldn't be found", "guildId", guildId));
+		GuildEntity guildEntity = this.guildRepository.findById(guildId)
+                .orElseThrow(() -> new GamepettoEntityNotFoundException("Guild entity couldn't be found", "id", guildId));
 		guildEntity.setBotPrefix(botPrefix);
 		this.guildRepository.save(guildEntity);
 	}

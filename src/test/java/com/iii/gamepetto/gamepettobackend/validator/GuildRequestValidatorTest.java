@@ -33,7 +33,7 @@ class GuildRequestValidatorTest {
     @Test
     void validatorShouldntGenerateErrorsWhenObjectIsFullValid() {
         //given
-        this.guildRequest.setGuildId("12315421");
+        this.guildRequest.setId("12315421");
         this.guildRequest.setName("Test");
         this.guildRequest.setIcon("dasdasdasdasdas");
 
@@ -47,7 +47,7 @@ class GuildRequestValidatorTest {
     @Test
     void validatorShouldntGenerateErrorsWhenObjectIsValidWithoutIcon() {
         //given
-        this.guildRequest.setGuildId("123");
+        this.guildRequest.setId("123");
         this.guildRequest.setName("Asd");
 
         //when
@@ -65,14 +65,14 @@ class GuildRequestValidatorTest {
 
         //then
         assertThat(this.errors.hasErrors(), is(true));
-        assertThat(this.errors.getFieldError("guildId"), is(notNullValue()));
+        assertThat(this.errors.getFieldError("id"), is(notNullValue()));
         assertThat(this.errors.getFieldError("name"), is(notNullValue()));
     }
 
     @Test
     void validatorShouldGenerateErrorsWhenObjectPropertiesAreEmpty() {
         //given
-        this.guildRequest.setGuildId("");
+        this.guildRequest.setId("");
         this.guildRequest.setName("");
 
         //when
@@ -80,7 +80,7 @@ class GuildRequestValidatorTest {
 
         //then
         assertThat(this.errors.hasErrors(), is(true));
-        assertThat(this.errors.getFieldError("guildId"), is(notNullValue()));
+        assertThat(this.errors.getFieldError("id"), is(notNullValue()));
         assertThat(this.errors.getFieldError("name"), is(notNullValue()));
     }
 
@@ -96,7 +96,7 @@ class GuildRequestValidatorTest {
         String icon = IntStream.range(0, this.iconMaxLength+1)
                 .mapToObj(i -> "x")
                 .collect(Collectors.joining());
-        this.guildRequest.setGuildId(guildId);
+        this.guildRequest.setId(guildId);
         this.guildRequest.setName(name);
         this.guildRequest.setIcon(icon);
 
@@ -105,7 +105,7 @@ class GuildRequestValidatorTest {
 
         //then
         assertThat(this.errors.hasErrors(), is(true));
-        assertThat(this.errors.getFieldError("guildId"), is(notNullValue()));
+        assertThat(this.errors.getFieldError("id"), is(notNullValue()));
         assertThat(this.errors.getFieldError("name"), is(notNullValue()));
         assertThat(this.errors.getFieldError("icon"), is(notNullValue()));
     }

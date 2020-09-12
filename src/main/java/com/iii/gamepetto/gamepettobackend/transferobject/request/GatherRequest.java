@@ -9,7 +9,7 @@ public class GatherRequest implements Serializable {
 	private String name;
 	private String shortName;
 	private String channelId;
-	private Integer playerPerTeam;
+	private Integer playersPerTeam;
 	private Long gameId;
 	private Integer mapsNumber;
 	private Boolean mapsRandom;
@@ -48,12 +48,12 @@ public class GatherRequest implements Serializable {
 		this.channelId = channelId;
 	}
 
-	public Integer getPlayerPerTeam() {
-		return playerPerTeam;
+	public Integer getPlayersPerTeam() {
+		return playersPerTeam;
 	}
 
-	public void setPlayerPerTeam(Integer playerPerTeam) {
-		this.playerPerTeam = playerPerTeam;
+	public void setPlayersPerTeam(Integer playersPerTeam) {
+		this.playersPerTeam = playersPerTeam;
 	}
 
 	public Long getGameId() {

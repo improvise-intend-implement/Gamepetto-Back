@@ -11,7 +11,7 @@ BEGIN
         INSERT INTO game
             (id, name)
         VALUES
-        (1, 'Wolfenstein: Enemy Territory')
+            (1, 'Wolfenstein: Enemy Territory')
              , (2, 'Counter-Strike: Global Offensive');
     END IF;
 END^;
@@ -26,7 +26,7 @@ BEGIN
         INSERT INTO map
             (id, name, game_id)
         VALUES
-        (1, 'supply', 1)
+            (1, 'supply', 1)
              , (2, 'sw_goldrush_te', 1)
              , (3, 'bremen_b3', 1)
              , (4, 'frostbite', 1)
@@ -40,7 +40,7 @@ BEGIN
         INSERT INTO map
             (id, name, game_id)
         VALUES
-        (11, 'Inferno', 2)
+            (11, 'Inferno', 2)
              , (12, 'Train', 2)
              , (13, 'Mirage', 2)
              , (14, 'Nuke', 2)

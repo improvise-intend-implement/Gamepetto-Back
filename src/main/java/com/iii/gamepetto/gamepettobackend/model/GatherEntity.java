@@ -24,6 +24,7 @@ import java.util.Set;
 public class GatherEntity implements Serializable {
 
 	public static final long serialVersionUID = 3161254443484779838L;
+
 	@Id
 	@GeneratedValue
 	private Long id;
