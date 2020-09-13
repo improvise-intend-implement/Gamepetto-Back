@@ -22,57 +22,96 @@ public class GatherRequestValidator implements Validator {
 	public void validate(Object o, Errors errors) {
 		GatherRequest gather = (GatherRequest) o;
 
-		if (gather.getGuildId() == null || gather.getGuildId().isBlank()) {
+		this.validateGuildId(errors, gather.getGuildId());
+		this.validateName(errors, gather.getGuildId(), gather.getName());
+		this.validateShortName(errors, gather.getGuildId(), gather.getShortName());
+		this.validateChannelId(errors, gather.getChannelId());
+		this.validatePlayersPerTeam(errors, gather.getPlayersPerTeam());
+		this.validateMapsNumber(errors, gather.getMapsNumber());
+		this.validateGameId(errors, gather.getGameId());
+		this.validateMapsRandom(errors, gather.getMapsRandom());
+		this.validateCaptainRolePriority(errors, gather.getCaptainRolePriority());
+		this.validateAllAllowed(errors, gather.getAllAllowed());
+	}
+
+	private void validateGuildId(Errors errors, String guildId) {
+		if (guildId == null || guildId.isBlank()) {
 			errors.rejectValue("guildId", "validator.Guild.id.empty");
 		}
+	}
 
-		if (gather.getName() == null || gather.getName().isBlank()) {
+	private void validateName(Errors errors, String guildId, String name) {
+		if (name == null || name.isBlank()) {
 			errors.rejectValue("name", "validator.Gather.name.empty");
-		} else if (gather.getName().length() > 128) {
+		} else if (name.length() > 128) {
 			errors.rejectValue("name", "validator.Gather.name.length.max");
-		} else if (this.gatherService.nameExists(gather.getGuildId(), gather.getName())) {
+		} else if (name.startsWith(" ") || name.endsWith(" ")) {
+			errors.rejectValue("name", "validator.Gather.name.whiteSpaces.startEnd");
+		} else if (this.gatherService.nameExists(guildId, name)) {
 			errors.rejectValue("name", "validator.Gather.name.exists");
 		}
+	}
 
-		if (gather.getShortName() == null || gather.getShortName().isBlank()) {
+	private void validateShortName(Errors errors, String guildId, String shortName) {
+		if (shortName == null || shortName.isBlank()) {
 			errors.rejectValue("shortName", "validator.Gather.shortName.empty");
-		} else if (gather.getShortName().length() > 16) {
+		} else if (shortName.length() > 16) {
 			errors.rejectValue("shortName", "validator.Gather.shortName.length.max");
-		} else if (this.gatherService.shortNameExists(gather.getGuildId(), gather.getShortName())) {
+		} else if (shortName.matches("^[0-9]+$")) {
+			errors.rejectValue("shortName", "validator.Gather.shortName.onlyNumbers");
+		} else if (shortName.startsWith("-") || shortName.startsWith("#")) {
+			errors.rejectValue("shortName", "validator.Gather.shortName.illegalCharacters");
+		} else if (shortName.contains(" ")) {
+			errors.rejectValue("shortName", "validator.Gather.shortName.whiteSpaces");
+		} else if (this.gatherService.shortNameExists(guildId, shortName)) {
 			errors.rejectValue("shortName", "validator.Gather.shortName.exists");
 		}
+	}
 
-		if (gather.getChannelId() == null || gather.getChannelId().isBlank()) {
+	private void validateChannelId(Errors errors, String channelId) {
+		if (channelId == null || channelId.isBlank()) {
 			errors.rejectValue("channelId", "validator.Gather.channelId.empty");
-		} else if (this.gatherService.channelExists(gather.getChannelId())) {
+		} else if (this.gatherService.channelExists(channelId)) {
 			errors.rejectValue("channelId", "validator.Gather.channelId.exists");
 		}
+	}
 
-		if (gather.getPlayersPerTeam() == null) {
+	private void validatePlayersPerTeam(Errors errors, Integer playersPerTeam) {
+		if (playersPerTeam == null) {
 			errors.rejectValue("playersPerTeam", "validator.Gather.playersPerTeam.empty");
-		} else if (gather.getPlayersPerTeam() < 1 || gather.getPlayersPerTeam() > 100) {
+		} else if (playersPerTeam < 1 || playersPerTeam > 100) {
 			errors.rejectValue("playersPerTeam", "validator.Gather.playersPerTeam.value.range");
 		}
+	}
 
-		if (gather.getMapsNumber() == null) {
+	private void validateMapsNumber(Errors errors, Integer mapsNumber) {
+		if (mapsNumber == null) {
 			errors.rejectValue("mapsNumber", "validator.Gather.mapsNumber.empty");
-		} else if (gather.getMapsNumber() < 1 || gather.getMapsNumber() > 10) {
+		} else if (mapsNumber < 1 || mapsNumber > 10) {
 			errors.rejectValue("mapsNumber", "validator.Gather.mapsNumber.value.range");
 		}
+	}
 
-		if (gather.getGameId() == null) {
+	private void validateGameId(Errors errors, Long gameId) {
+		if (gameId == null) {
 			errors.rejectValue("gameId", "validator.Gather.gameId.empty");
 		}
+	}
 
-		if (gather.getMapsRandom() == null) {
+	private void validateMapsRandom(Errors errors, Boolean mapsRandom) {
+		if (mapsRandom == null) {
 			errors.rejectValue("mapsRandom", "validator.Gather.mapsRandom.empty");
 		}
+	}
 
-		if (gather.getCaptainRolePriority() == null) {
+	private void validateCaptainRolePriority(Errors errors, Boolean captainRolePriority) {
+		if (captainRolePriority == null) {
 			errors.rejectValue("captainRolePriority", "validator.Gather.captainRolePriority.empty");
 		}
+	}
 
-		if (gather.getAllAllowed() == null) {
+	private void validateAllAllowed(Errors errors, Boolean allAllowed) {
+		if (allAllowed == null) {
 			errors.rejectValue("allAllowed", "validator.Gather.allAllowed.empty");
 		}
 	}
