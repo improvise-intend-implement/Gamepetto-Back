@@ -1,18 +1,29 @@
 package com.iii.gamepetto.gamepettobackend.service;
 
+import com.iii.gamepetto.gamepettobackend.exception.GamepettoEntityNotFoundException;
+import com.iii.gamepetto.gamepettobackend.model.GameEntity;
+import com.iii.gamepetto.gamepettobackend.model.GuildEntity;
 import com.iii.gamepetto.gamepettobackend.repository.GameRepository;
 import com.iii.gamepetto.gamepettobackend.repository.GatherRepository;
 import com.iii.gamepetto.gamepettobackend.repository.GuildRepository;
+import com.iii.gamepetto.gamepettobackend.transferobject.request.GatherRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
+
+import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -34,6 +45,10 @@ class GatherServiceImplTest {
 	@BeforeEach
 	void setup() {
 		MockitoAnnotations.initMocks(this);
+		//Temporary (hopefully ":D") not elegant solution which should be refactored
+		this.modelMapper.getConfiguration()
+				.setMatchingStrategy(MatchingStrategies.STRICT)
+				.setAmbiguityIgnored(true);
 	}
 
 	@Test
@@ -46,25 +61,11 @@ class GatherServiceImplTest {
 		then(this.gatherRepository).should(times(1)).channelExists(anyString());
 	}
 
-	@Test
-	void channelExistsShouldReturnFalseWhenRepositoryMethodReturnsFalse() {
+	@ParameterizedTest
+	@ValueSource(booleans = {false, true})
+	void channelExistsShouldReturnSameBooleanAsRepositoryMethod(boolean exists) {
 		//given
-		boolean exists = false;
 		String channelId = "12321";
-		given(this.gatherRepository.channelExists(channelId)).willReturn(exists);
-
-		//when
-		boolean result = this.sut.channelExists(channelId);
-
-		//then
-		assertThat(result, is(exists));
-	}
-
-	@Test
-	void channelExistsShouldReturnTrueWhenRepositoryMethodReturnsTrue() {
-		//given
-		boolean exists = true;
-		String channelId = "123";
 		given(this.gatherRepository.channelExists(channelId)).willReturn(exists);
 
 		//when
@@ -84,10 +85,10 @@ class GatherServiceImplTest {
 		then(this.gatherRepository).should(times(1)).shortNameExists(anyString(), anyString());
 	}
 
-	@Test
-	void shortNameExistsShouldReturnFalseWhenRepositoryMethodReturnsFalse() {
+	@ParameterizedTest
+	@ValueSource(booleans = {false, true})
+	void shortNameExistsShouldReturnSameBooleanAsRepositoryMethod(boolean exists) {
 		//given
-		boolean exists = false;
 		String guildId = "12321";
 		String shortName = "shortie";
 		given(this.gatherRepository.shortNameExists(guildId, shortName)).willReturn(exists);
@@ -100,19 +101,53 @@ class GatherServiceImplTest {
 	}
 
 	@Test
-	void shortNameExistsShouldReturnTrueWhenRepositoryMethodReturnsTrue() {
+	void nameExistsShouldCallGatherRepositoryMethod() {
 		//given
-		boolean exists = true;
-		String guildId = "12321";
-		String shortName = "shortie";
-		given(this.gatherRepository.shortNameExists(guildId, shortName)).willReturn(exists);
+		//when
+		this.sut.nameExists("321231", "shortiee");
+
+		//then
+		then(this.gatherRepository).should(times(1)).nameExists(anyString(), anyString());
+	}
+
+	@ParameterizedTest
+	@ValueSource(booleans = {false, true})
+	void nameExistsShouldReturnSameBooleanAsRepositoryMethod(boolean exists) {
+		//given
+		String guildId = "123";
+		String name = "name ski";
+		given(this.gatherRepository.nameExists(guildId, name)).willReturn(exists);
 
 		//when
-		boolean result = this.sut.shortNameExists(guildId, shortName);
+		boolean result = this.sut.nameExists(guildId, name);
 
 		//then
 		assertThat(result, is(exists));
 	}
 
-	//TODO: more tests, check if one can parameterize tests
+	@Test
+	void createGatherShouldThrowExceptionWhenGameEntityDoesntExist() {
+		assertThrows(GamepettoEntityNotFoundException.class, () -> {
+			//given
+			GatherRequest request = new GatherRequest();
+			given(this.guildRepository.findById(anyString())).willReturn(Optional.of(new GuildEntity()));
+			given(this.gameRepository.findById(anyLong())).willReturn(Optional.empty());
+
+			//when
+			this.sut.createGather(request);
+		});
+	}
+
+	@Test
+	void createGatherShouldThrowExceptionWhenGuildEntityDoesntExist() {
+		assertThrows(GamepettoEntityNotFoundException.class, () -> {
+			//given
+			GatherRequest request = new GatherRequest();
+			given(this.gameRepository.findById(anyLong())).willReturn(Optional.of(new GameEntity()));
+			given(this.guildRepository.findById(anyString())).willReturn(Optional.empty());
+
+			//when
+			this.sut.createGather(request);
+		});
+	}
 }

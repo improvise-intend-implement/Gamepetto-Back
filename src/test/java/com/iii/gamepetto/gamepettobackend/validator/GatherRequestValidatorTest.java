@@ -4,6 +4,8 @@ import com.iii.gamepetto.gamepettobackend.service.GatherService;
 import com.iii.gamepetto.gamepettobackend.transferobject.request.GatherRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -222,10 +224,11 @@ class GatherRequestValidatorTest {
 		assertThat(this.errors.getFieldError("shortName"), is(notNullValue()));
 	}
 
-	@Test
-	void validatorShouldGenerateErrorWhenShortNameContainsHashAtTheBeginning() {
+	@ParameterizedTest
+	@ValueSource(strings = {"#gathero23", "-nameski", "@yup"})
+	void validatorShouldGenerateErrorWhenShortNameContainsIllegalCharacterAtTheBeginning(String shortName) {
 		//given
-		this.gatherRequest.setShortName("#gathero23");
+		this.gatherRequest.setShortName(shortName);
 
 		//when
 		this.sut.validate(this.gatherRequest, this.errors);
@@ -235,10 +238,11 @@ class GatherRequestValidatorTest {
 		assertThat(this.errors.getFieldError("shortName"), is(notNullValue()));
 	}
 
-	@Test
-	void validatorShouldGenerateErrorWhenShortNameContainsDashAtTheBeginning() {
+	@ParameterizedTest
+	@ValueSource(strings = {" beginning", "end ", "in the middle"})
+	void validateShouldGenerateErrorWhenShortNameContainsWhiteSpaceAnywhere(String shortName) {
 		//given
-		this.gatherRequest.setShortName("-nameski");
+		this.gatherRequest.setShortName(shortName);
 
 		//when
 		this.sut.validate(this.gatherRequest, this.errors);
@@ -248,23 +252,11 @@ class GatherRequestValidatorTest {
 		assertThat(this.errors.getFieldError("shortName"), is(notNullValue()));
 	}
 
-	@Test
-	void validateShouldGenerateErrorWhenShortNameContainsWhiteSpaceInTheMiddle() {
+	@ParameterizedTest
+	@ValueSource(strings = {" at the beginning", "at the end "})
+	void validateShouldGenerateErrorWhenNameStartsOrEndsWithWhiteSpace(String name) {
 		//given
-		this.gatherRequest.setShortName("asd asdas");
-
-		//when
-		this.sut.validate(this.gatherRequest, this.errors);
-
-		//then
-		assertThat(this.errors.hasErrors(), is(true));
-		assertThat(this.errors.getFieldError("shortName"), is(notNullValue()));
-	}
-
-	@Test
-	void validateShouldGenerateErrorWhenNameStartsWithWhiteSpace() {
-		//given
-		this.gatherRequest.setName(" nameski of gathero");
+		this.gatherRequest.setName(name);
 
 		//when
 		this.sut.validate(this.gatherRequest, this.errors);
@@ -272,44 +264,5 @@ class GatherRequestValidatorTest {
 		//then
 		assertThat(this.errors.hasErrors(), is(true));
 		assertThat(this.errors.getFieldError("name"), is(notNullValue()));
-	}
-
-	@Test
-	void validateShouldGenerateErrorWhenNameEndsWithWhiteSpace() {
-		//given
-		this.gatherRequest.setName("nameski of gathero ");
-
-		//when
-		this.sut.validate(this.gatherRequest, this.errors);
-
-		//then
-		assertThat(this.errors.hasErrors(), is(true));
-		assertThat(this.errors.getFieldError("name"), is(notNullValue()));
-	}
-
-	@Test
-	void validateShouldGenerateErrorWhenShortNameStartsWithWhiteSpace() {
-		//given
-		this.gatherRequest.setShortName(" shortie");
-
-		//when
-		this.sut.validate(this.gatherRequest, this.errors);
-
-		//then
-		assertThat(this.errors.hasErrors(), is(true));
-		assertThat(this.errors.getFieldError("shortName"), is(notNullValue()));
-	}
-
-	@Test
-	void validateShouldGenerateErrorWhenShortNameEndsWithWhiteSpace() {
-		//given
-		this.gatherRequest.setShortName("shortie ");
-
-		//when
-		this.sut.validate(this.gatherRequest, this.errors);
-
-		//then
-		assertThat(this.errors.hasErrors(), is(true));
-		assertThat(this.errors.getFieldError("shortName"), is(notNullValue()));
 	}
 }

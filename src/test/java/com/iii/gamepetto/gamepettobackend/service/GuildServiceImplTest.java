@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 
 import java.util.Collections;
 import java.util.List;
@@ -41,6 +42,10 @@ class GuildServiceImplTest {
     @BeforeEach
     void setup() {
         MockitoAnnotations.initMocks(this);
+        //Temporary (hopefully ":D") not elegant solution which should be refactored
+        this.modelMapper.getConfiguration()
+                .setMatchingStrategy(MatchingStrategies.STRICT)
+                .setAmbiguityIgnored(true);
     }
 
     @Test
@@ -207,7 +212,6 @@ class GuildServiceImplTest {
             given(this.guildRepository.findById(anyString())).willReturn(Optional.empty());
 
             //when
-            //then
             this.sut.updateGuildPrefix(guildId, botPrefix);
         });
     }

@@ -59,7 +59,7 @@ public class GatherRequestValidator implements Validator {
 			errors.rejectValue("shortName", "validator.Gather.shortName.length.max");
 		} else if (shortName.matches("^[0-9]+$")) {
 			errors.rejectValue("shortName", "validator.Gather.shortName.onlyNumbers");
-		} else if (shortName.startsWith("-") || shortName.startsWith("#")) {
+		} else if (shortName.startsWith("-") || shortName.startsWith("#") || shortName.startsWith("@")) {
 			errors.rejectValue("shortName", "validator.Gather.shortName.illegalCharacters");
 		} else if (shortName.contains(" ")) {
 			errors.rejectValue("shortName", "validator.Gather.shortName.whiteSpaces");
