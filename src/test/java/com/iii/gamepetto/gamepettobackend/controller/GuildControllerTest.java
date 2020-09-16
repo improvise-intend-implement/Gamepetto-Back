@@ -50,13 +50,13 @@ class GuildControllerTest {
     void addGuildShouldReturnCreatedStatusWhenParameterIsValid() throws Exception {
         //given
         GuildRequest request = new GuildRequest();
-        request.setGuildId("123213");
+        request.setId("123213");
         request.setName("Testowy");
         given(this.guildService.saveOrUpdate(any(GuildRequest.class))).willReturn(new GuildResponse());
 
         // when
         // then
-        this.mockMvc.perform(post("/guild")
+        this.mockMvc.perform(post("/guilds")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated());
@@ -67,12 +67,12 @@ class GuildControllerTest {
     void addGuildShouldReturnBadRequestWhenParameterIsInvalid() throws Exception {
         //given
         GuildRequest request = new GuildRequest();
-        request.setGuildId("");
+        request.setId("");
         request.setName("");
 
         //when
         //then
-        this.mockMvc.perform(post("/guild")
+        this.mockMvc.perform(post("/guilds")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest());
@@ -86,7 +86,7 @@ class GuildControllerTest {
 
         //when
         //then
-        this.mockMvc.perform(delete("/guild/1234"))
+        this.mockMvc.perform(delete("/guilds/1234"))
                 .andExpect(status().isOk());
         then(this.guildService).should(times(1)).updateBotPresentToFalse(anyString());
     }
@@ -98,7 +98,7 @@ class GuildControllerTest {
 
         //when
         //then
-        this.mockMvc.perform(delete("/guild/1234"))
+        this.mockMvc.perform(delete("/guilds/1234"))
                 .andExpect(status().isNotFound());
         then(this.guildService).should(times(1)).updateBotPresentToFalse(anyString());
     }
@@ -110,7 +110,7 @@ class GuildControllerTest {
 
         //when
         //then
-        this.mockMvc.perform(get("/guild/prefix"))
+        this.mockMvc.perform(get("/guilds/prefix"))
                 .andExpect(status().isOk());
         then(this.guildService).should(times(1)).getAllPrefixesForBotsInServers();
     }
@@ -123,7 +123,7 @@ class GuildControllerTest {
 
         //when
         //then
-        this.mockMvc.perform(patch("/guild/1/prefix")
+        this.mockMvc.perform(patch("/guilds/1/prefix")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk());
@@ -141,7 +141,7 @@ class GuildControllerTest {
 
         //when
         //then
-        this.mockMvc.perform(patch("/guild/1/prefix")
+        this.mockMvc.perform(patch("/guilds/1/prefix")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.objectMapper.writeValueAsString(request)))
                 .andExpect(status().isNotFound());
@@ -155,7 +155,7 @@ class GuildControllerTest {
 
         //when
         //then
-        this.mockMvc.perform(patch("/guild/1/prefix")
+        this.mockMvc.perform(patch("/guilds/1/prefix")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest());

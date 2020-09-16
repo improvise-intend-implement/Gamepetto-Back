@@ -25,35 +25,30 @@ class GuildRepositoryIntegrationTest {
 
 	@BeforeEach
 	void setup() {
-		Long id1 = 1L;
 		String guildId1 = "1";
 		String name1 = "GamepettoS";
 		GuildEntity guildEntity1 = new GuildEntity();
-		guildEntity1.setId(id1);
-		guildEntity1.setGuildId(guildId1);
+		guildEntity1.setId(guildId1);
 		guildEntity1.setName(name1);
 
-		Long id2 = 2L;
 		String guildId2 = "2";
 		String name2 = "Test2";
 		boolean isBotPresent2 = false;
 		GuildEntity guildEntity2 = new GuildEntity();
-		guildEntity2.setId(id2);
-		guildEntity2.setGuildId(guildId2);
+		guildEntity2.setId(guildId2);
 		guildEntity2.setName(name2);
 		guildEntity2.setBotPresent(isBotPresent2);
 
-		Long id3 = 3L;
 		String guildId3 = "3";
 		String name3 = "Test3";
 		GuildEntity guildEntity3 = new GuildEntity();
-		guildEntity3.setId(id3);
-		guildEntity3.setGuildId(guildId3);
+		guildEntity3.setId(guildId3);
 		guildEntity3.setName(name3);
 
 		List<GuildEntity> guildsToSave = List.of(guildEntity1, guildEntity2, guildEntity3);
 
 		this.sut.saveAll(guildsToSave);
+		this.sut.flush();
 	}
 
 	@AfterEach
@@ -62,15 +57,14 @@ class GuildRepositoryIntegrationTest {
 	}
 
 	@Test
-	void findByGuildIdShouldReturnGuildWhenExistsInDb() {
+	void findByIdShouldReturnGuildWhenExistsInDb() {
 		//given
 		//when
-		GuildEntity result = this.sut.findByGuildId("1");
+		GuildEntity result = this.sut.findById("1").orElse(null);
 
 		//then
 		Assertions.assertNotNull(result);
 		assertThat(result.getId(), not(nullValue()));
-		assertThat(result.getGuildId(), not(emptyOrNullString()));
 		assertThat(result.getName(), not(emptyOrNullString()));
 	}
 
@@ -92,7 +86,7 @@ class GuildRepositoryIntegrationTest {
 		String defaultPrefix = "?";
 
 		//when
-		String result = this.sut.findByGuildId("1").getBotPrefix();
+		String result = this.sut.findById("1").map(GuildEntity::getBotPrefix).orElse(null);
 
 		//then
 		assertThat(result, is(defaultPrefix));

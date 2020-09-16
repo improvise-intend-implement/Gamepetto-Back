@@ -80,4 +80,43 @@ class BotPrefixValidatorTest {
 		assertThat(this.errors.hasErrors(), is(true));
 		assertThat(this.errors.getFieldError("botPrefix"), is(notNullValue()));
 	}
+
+	@Test
+	void validatorShouldGenerateErrorWhenBotPrefixContainsWhiteSpaceAtTheBeginning() {
+		//given
+		this.botPrefix.setBotPrefix(" !p");
+
+		//when
+		this.sut.validate(this.botPrefix, this.errors);
+
+		//then
+		assertThat(this.errors.hasErrors(), is(true));
+		assertThat(this.errors.getFieldError("botPrefix"), is(notNullValue()));
+	}
+
+	@Test
+	void validatorShouldGenerateErrorWhenBotPrefixContainsWhiteSpaceInTheMiddle() {
+		//given
+		this.botPrefix.setBotPrefix("! p");
+
+		//when
+		this.sut.validate(this.botPrefix, this.errors);
+
+		//then
+		assertThat(this.errors.hasErrors(), is(true));
+		assertThat(this.errors.getFieldError("botPrefix"), is(notNullValue()));
+	}
+
+	@Test
+	void validatorShouldGenerateErrorWhenBotPrefixContainsWhiteSpaceAtTheEnd() {
+		//given
+		this.botPrefix.setBotPrefix("!p ");
+
+		//when
+		this.sut.validate(this.botPrefix, this.errors);
+
+		//then
+		assertThat(this.errors.hasErrors(), is(true));
+		assertThat(this.errors.getFieldError("botPrefix"), is(notNullValue()));
+	}
 }

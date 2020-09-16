@@ -8,9 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface GuildRepository extends JpaRepository<GuildEntity, Long> {
-
-    GuildEntity findByGuildId(String guildId);
+public interface GuildRepository extends JpaRepository<GuildEntity, String> {
 
     List<GuildPrefix> findAllByBotPresentIsTrue();
 }

@@ -5,16 +5,16 @@ import java.io.Serializable;
 public class GuildRequest implements Serializable {
 
     private static final long serialVersionUID = -5783557158853448407L;
-    private String guildId;
+    private String id;
     private String name;
     private String icon;
 
-    public String getGuildId() {
-        return guildId;
+    public String getId() {
+        return id;
     }
 
-    public void setGuildId(String guildId) {
-        this.guildId = guildId;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {

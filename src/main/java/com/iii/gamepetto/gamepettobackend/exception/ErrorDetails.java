@@ -1,4 +1,4 @@
-package com.iii.gamepetto.gamepettobackend.validator;
+package com.iii.gamepetto.gamepettobackend.exception;
 
 import java.io.Serializable;
 import java.util.ArrayList;

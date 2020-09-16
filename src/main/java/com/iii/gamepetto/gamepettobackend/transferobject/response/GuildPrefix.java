@@ -5,20 +5,20 @@ import java.io.Serializable;
 public class GuildPrefix implements Serializable {
 
 	private final static long serialVersionUID = 2745352938917729819L;
-	private String guildId;
+	private String id;
 	private String botPrefix;
 
-	public GuildPrefix(String guildId, String botPrefix) {
-		this.guildId = guildId;
+	public GuildPrefix(String id, String botPrefix) {
+		this.id = id;
 		this.botPrefix = botPrefix;
 	}
 
-	public String getGuildId() {
-		return guildId;
+	public String getId() {
+		return id;
 	}
 
-	public void setGuildId(String guildId) {
-		this.guildId = guildId;
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public String getBotPrefix() {

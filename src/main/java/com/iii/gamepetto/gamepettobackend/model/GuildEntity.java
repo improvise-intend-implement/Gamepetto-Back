@@ -6,7 +6,6 @@ import org.hibernate.annotations.GenerationTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
@@ -19,10 +18,7 @@ public class GuildEntity implements Serializable {
     private static final long serialVersionUID = 3205106693431767441L;
 
     @Id
-    @GeneratedValue
-    private Long id;
-    @Column(length = 32, nullable = false, unique = true)
-    private String guildId;
+    private String id;
     @Column(nullable = false, length = 100)
     private String name;
     @Column(length = 128)
@@ -33,20 +29,12 @@ public class GuildEntity implements Serializable {
     @Column(columnDefinition = "VARCHAR(3) DEFAULT '?'")
     private String botPrefix;
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
-    }
-
-    public String getGuildId() {
-        return guildId;
-    }
-
-    public void setGuildId(String guildId) {
-        this.guildId = guildId;
     }
 
     public String getName() {

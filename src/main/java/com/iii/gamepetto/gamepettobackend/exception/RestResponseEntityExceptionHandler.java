@@ -1,6 +1,5 @@
 package com.iii.gamepetto.gamepettobackend.exception;
 
-import com.iii.gamepetto.gamepettobackend.validator.ErrorDetails;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpHeaders;
