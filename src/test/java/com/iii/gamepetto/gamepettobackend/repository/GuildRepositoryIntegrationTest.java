@@ -57,7 +57,7 @@ class GuildRepositoryIntegrationTest {
 	}
 
 	@Test
-	void findByGuildIdShouldReturnGuildWhenExistsInDb() {
+	void findByIdShouldReturnGuildWhenExistsInDb() {
 		//given
 		//when
 		GuildEntity result = this.sut.findById("1").orElse(null);

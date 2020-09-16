@@ -42,7 +42,6 @@ class GuildServiceImplTest {
     @BeforeEach
     void setup() {
         MockitoAnnotations.initMocks(this);
-        //Temporary (hopefully ":D") not elegant solution which should be refactored
         this.modelMapper.getConfiguration()
                 .setMatchingStrategy(MatchingStrategies.STRICT)
                 .setAmbiguityIgnored(true);

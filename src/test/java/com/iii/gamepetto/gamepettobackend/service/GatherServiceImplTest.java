@@ -2,6 +2,7 @@ package com.iii.gamepetto.gamepettobackend.service;
 
 import com.iii.gamepetto.gamepettobackend.exception.GamepettoEntityNotFoundException;
 import com.iii.gamepetto.gamepettobackend.model.GameEntity;
+import com.iii.gamepetto.gamepettobackend.model.GatherEntity;
 import com.iii.gamepetto.gamepettobackend.model.GuildEntity;
 import com.iii.gamepetto.gamepettobackend.repository.GameRepository;
 import com.iii.gamepetto.gamepettobackend.repository.GatherRepository;
@@ -23,10 +24,12 @@ import java.util.Optional;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 
 class GatherServiceImplTest {
@@ -45,7 +48,6 @@ class GatherServiceImplTest {
 	@BeforeEach
 	void setup() {
 		MockitoAnnotations.initMocks(this);
-		//Temporary (hopefully ":D") not elegant solution which should be refactored
 		this.modelMapper.getConfiguration()
 				.setMatchingStrategy(MatchingStrategies.STRICT)
 				.setAmbiguityIgnored(true);
@@ -129,12 +131,14 @@ class GatherServiceImplTest {
 	void createGatherShouldThrowExceptionWhenGameEntityDoesntExist() {
 		assertThrows(GamepettoEntityNotFoundException.class, () -> {
 			//given
-			GatherRequest request = new GatherRequest();
+			GatherRequest gatherRequest = new GatherRequest();
+			gatherRequest.setGameId(1L);
+			gatherRequest.setGuildId("213231");
 			given(this.guildRepository.findById(anyString())).willReturn(Optional.of(new GuildEntity()));
 			given(this.gameRepository.findById(anyLong())).willReturn(Optional.empty());
 
 			//when
-			this.sut.createGather(request);
+			this.sut.createGather(gatherRequest);
 		});
 	}
 
@@ -142,12 +146,49 @@ class GatherServiceImplTest {
 	void createGatherShouldThrowExceptionWhenGuildEntityDoesntExist() {
 		assertThrows(GamepettoEntityNotFoundException.class, () -> {
 			//given
-			GatherRequest request = new GatherRequest();
+			GatherRequest gatherRequest = new GatherRequest();
+			gatherRequest.setGameId(1L);
+			gatherRequest.setGuildId("213231");
 			given(this.gameRepository.findById(anyLong())).willReturn(Optional.of(new GameEntity()));
 			given(this.guildRepository.findById(anyString())).willReturn(Optional.empty());
 
 			//when
-			this.sut.createGather(request);
+			this.sut.createGather(gatherRequest);
 		});
+	}
+
+	@Test
+	void createGatherShouldCallGatherRepositorySaveMethod() {
+		//given
+		GatherRequest gatherRequest = new GatherRequest();
+		gatherRequest.setGameId(1L);
+		gatherRequest.setGuildId("123123");
+		given(this.gameRepository.findById(gatherRequest.getGameId())).willReturn(Optional.of(new GameEntity()));
+		given(this.guildRepository.findById(gatherRequest.getGuildId())).willReturn(Optional.of(new GuildEntity()));
+
+		//when
+		this.sut.createGather(gatherRequest);
+
+		//then
+		then(this.gatherRepository).should(times(1)).save(any(GatherEntity.class));
+	}
+
+	@Test
+	void createGatherShouldSetAppropriateFieldsBesidesModelMapper() {
+		//given
+		GatherEntity gatherEntity = mock(GatherEntity.class);
+		GatherRequest gatherRequest = new GatherRequest();
+		gatherRequest.setGameId(1L);
+		gatherRequest.setGuildId("123123");
+		given(this.modelMapper.map(gatherRequest, GatherEntity.class)).willReturn(gatherEntity);
+		given(this.gameRepository.findById(gatherRequest.getGameId())).willReturn(Optional.of(new GameEntity()));
+		given(this.guildRepository.findById(gatherRequest.getGuildId())).willReturn(Optional.of(new GuildEntity()));
+
+		//when
+		this.sut.createGather(gatherRequest);
+
+		//then
+		then(gatherEntity).should(times(1)).setGuild(any(GuildEntity.class));
+		then(gatherEntity).should(times(1)).setGame(any(GameEntity.class));
 	}
 }

@@ -15,7 +15,7 @@ import javax.validation.Valid;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/guild")
+@RequestMapping("/guilds")
 public class GuildController {
 
     private final GuildService guildService;
