@@ -27,7 +27,6 @@ class GatherRepositoryIntegrationTest {
 	@BeforeEach
 	void setUp() {
 		GameEntity gameEntity1 = new GameEntity();
-		gameEntity1.setId(1L);
 		gameEntity1.setName("Wolfenstein: ET");
 		gameEntity1 = this.gameRepository.save(gameEntity1);
 
@@ -37,7 +36,6 @@ class GatherRepositoryIntegrationTest {
 		guildEntity1 = this.guildRepository.saveAndFlush(guildEntity1);
 
 		GatherEntity gatherEntity1 = new GatherEntity();
-		gatherEntity1.setId(1L);
 		gatherEntity1.setAllAllowed(true);
 		gatherEntity1.setCaptainRolePriority(true);
 		gatherEntity1.setMapsRandom(true);

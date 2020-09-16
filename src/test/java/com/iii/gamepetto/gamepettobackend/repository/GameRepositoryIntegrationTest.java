@@ -20,20 +20,19 @@ class GameRepositoryIntegrationTest {
 
 	@Autowired
 	GameRepository sut;
+	List<GameEntity> games;
 
 	@BeforeEach
 	void setup() {
 		GameEntity gameEntity1 = new GameEntity();
-		gameEntity1.setId(1L);
 		gameEntity1.setName("Wolfenstein: ET");
 
 		GameEntity gameEntity2 = new GameEntity();
-		gameEntity2.setId(2L);
 		gameEntity2.setName("Counter Strike: Global Offensive");
 
 		List<GameEntity> gamesToSave = List.of(gameEntity1, gameEntity2);
 
-		this.sut.saveAll(gamesToSave);
+		this.games = this.sut.saveAll(gamesToSave);
 		this.sut.flush();
 	}
 
@@ -46,7 +45,7 @@ class GameRepositoryIntegrationTest {
 	void findByIdShouldReturnGameWhenExistsInDb() {
 		//given
 		//when
-		GameEntity result = this.sut.findById(1L).orElse(null);
+		GameEntity result = this.sut.findById(this.games.get(0).getId()).orElse(null);
 
 		//then
 		Assertions.assertNotNull(result);
