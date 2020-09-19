@@ -1,6 +1,7 @@
 package com.iii.gamepetto.gamepettobackend.transferobject.request;
 
 import java.io.Serializable;
+import java.util.Set;
 
 public class GatherRequest implements Serializable {
 
@@ -15,6 +16,7 @@ public class GatherRequest implements Serializable {
 	private Boolean mapsRandom;
 	private Boolean captainRolePriority;
 	private Boolean allAllowed;
+	private Set<Long> mapsIds;
 
 	public String getGuildId() {
 		return guildId;
@@ -94,5 +96,13 @@ public class GatherRequest implements Serializable {
 
 	public void setAllAllowed(Boolean allAllowed) {
 		this.allAllowed = allAllowed;
+	}
+
+	public Set<Long> getMapsIds() {
+		return mapsIds;
+	}
+
+	public void setMapsIds(Set<Long> mapsIds) {
+		this.mapsIds = mapsIds;
 	}
 }

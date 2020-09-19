@@ -2,8 +2,11 @@ package com.iii.gamepetto.gamepettobackend.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.io.Serializable;
 
@@ -18,6 +21,9 @@ public class MapEntity  implements Serializable {
 	private Long id;
 	@Column(length = 128, nullable = false, unique = true)
 	private String name;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "game_id")
+	private GameEntity game;
 
 	public Long getId() {
 		return id;
@@ -33,5 +39,13 @@ public class MapEntity  implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public GameEntity getGame() {
+		return game;
+	}
+
+	public void setGame(GameEntity game) {
+		this.game = game;
 	}
 }

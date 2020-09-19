@@ -14,6 +14,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.util.Set;
+
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -54,6 +56,7 @@ class GatherControllerTest {
 		request.setAllAllowed(true);
 		request.setCaptainRolePriority(true);
 		request.setMapsRandom(false);
+		request.setMapsIds(Set.of(1L, 2L, 3L, 4L, 5L));
 		given(this.gatherService.nameExists(anyString(), anyString())).willReturn(false);
 		given(this.gatherService.shortNameExists(anyString(), anyString())).willReturn(false);
 		given(this.gatherService.channelExists(anyString())).willReturn(false);

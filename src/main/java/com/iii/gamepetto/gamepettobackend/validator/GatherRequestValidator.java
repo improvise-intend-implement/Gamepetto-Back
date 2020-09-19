@@ -5,6 +5,8 @@ import com.iii.gamepetto.gamepettobackend.transferobject.request.GatherRequest;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+import java.util.Set;
+
 public class GatherRequestValidator implements Validator {
 
 	private final GatherService gatherService;
@@ -27,11 +29,23 @@ public class GatherRequestValidator implements Validator {
 		this.validateShortName(errors, gather.getGuildId(), gather.getShortName());
 		this.validateChannelId(errors, gather.getChannelId());
 		this.validatePlayersPerTeam(errors, gather.getPlayersPerTeam());
-		this.validateMapsNumber(errors, gather.getMapsNumber());
 		this.validateGameId(errors, gather.getGameId());
 		this.validateMapsRandom(errors, gather.getMapsRandom());
 		this.validateCaptainRolePriority(errors, gather.getCaptainRolePriority());
 		this.validateAllAllowed(errors, gather.getAllAllowed());
+
+		boolean mapsNumberValidated = this.validateMapsNumber(errors, gather.getMapsNumber());
+		if (mapsNumberValidated) {
+			this.validateMapsIds(errors, gather.getMapsIds(), gather.getMapsNumber());
+		}
+	}
+
+	private void validateMapsIds(Errors errors, Set<Long> mapsIds, Integer mapsNumber) {
+		if (mapsIds == null) {
+			errors.rejectValue("mapsIds", "validator.Gather.mapsIds.null");
+		} else if (mapsIds.size() < mapsNumber) {
+			errors.rejectValue("mapsIds", "validator.Gather.mapsIds.size.min");
+		}
 	}
 
 	private void validateGuildId(Errors errors, String guildId) {
@@ -84,12 +98,13 @@ public class GatherRequestValidator implements Validator {
 		}
 	}
 
-	private void validateMapsNumber(Errors errors, Integer mapsNumber) {
+	private boolean validateMapsNumber(Errors errors, Integer mapsNumber) {
 		if (mapsNumber == null) {
 			errors.rejectValue("mapsNumber", "validator.Gather.mapsNumber.empty");
 		} else if (mapsNumber < 1 || mapsNumber > 10) {
 			errors.rejectValue("mapsNumber", "validator.Gather.mapsNumber.value.range");
 		}
+		return errors.getFieldError("mapsNumber") == null;
 	}
 
 	private void validateGameId(Errors errors, Long gameId) {

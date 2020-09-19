@@ -1,16 +1,12 @@
 package com.iii.gamepetto.gamepettobackend.model;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.io.Serializable;
-import java.util.Set;
 
 @Entity
 @Table(name = "Game")
@@ -25,9 +21,6 @@ public class GameEntity implements Serializable {
 	private String name;
 	@Lob
 	private byte[] img;
-	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-	@JoinColumn(name = "game_id")
-	private Set<MapEntity> maps;
 
 	public Long getId() {
 		return id;
@@ -51,13 +44,5 @@ public class GameEntity implements Serializable {
 
 	public void setImg(byte[] img) {
 		this.img = img;
-	}
-
-	public Set<MapEntity> getMaps() {
-		return maps;
-	}
-
-	public void setMaps(Set<MapEntity> maps) {
-		this.maps = maps;
 	}
 }
