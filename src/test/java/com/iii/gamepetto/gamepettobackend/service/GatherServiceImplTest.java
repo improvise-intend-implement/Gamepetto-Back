@@ -174,12 +174,34 @@ class GatherServiceImplTest {
 			MapEntity mapEntity1 = new MapEntity();
 			mapEntity1.setId(1L);
 			given(this.gameRepository.findById(anyLong())).willReturn(Optional.of(new GameEntity()));
-			given(this.guildRepository.findById(anyString())).willReturn(Optional.empty());
+			given(this.guildRepository.findById(anyString())).willReturn(Optional.of(new GuildEntity()));
 			given(this.mapRepository.findAllByGameIdAndIdIn(gatherRequest.getGameId(), gatherRequest.getMapsIds())).willReturn(Set.of(mapEntity1));
 
 			//when
 			this.sut.createGather(gatherRequest);
 		});
+	}
+
+	@Test
+	void createGatherShouldThrowExceptionAndContainNotFoundMapsIdsWhenSizeOfMapsIdsDoesntMatchSizeOfFoundMapEntities() {
+		GamepettoEntityNotFoundException exception = assertThrows(GamepettoEntityNotFoundException.class, () -> {
+			//given
+			GatherRequest gatherRequest = new GatherRequest();
+			gatherRequest.setGameId(1L);
+			gatherRequest.setGuildId("213231");
+			gatherRequest.setMapsIds(Set.of(1L, 2L));
+			MapEntity mapEntity1 = new MapEntity();
+			mapEntity1.setId(1L);
+			given(this.gameRepository.findById(anyLong())).willReturn(Optional.of(new GameEntity()));
+			given(this.guildRepository.findById(anyString())).willReturn(Optional.of(new GuildEntity()));
+			given(this.mapRepository.findAllByGameIdAndIdIn(gatherRequest.getGameId(), gatherRequest.getMapsIds())).willReturn(Set.of(mapEntity1));
+
+			//when
+			this.sut.createGather(gatherRequest);
+		});
+
+		//then
+		assertThat((Set<Long>)exception.getValue(), is(Set.of(2L)));
 	}
 
 	@Test

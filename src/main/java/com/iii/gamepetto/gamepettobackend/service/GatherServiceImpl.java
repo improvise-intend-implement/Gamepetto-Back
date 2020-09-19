@@ -14,6 +14,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -51,8 +52,10 @@ public class GatherServiceImpl implements GatherService {
 	private Set<MapEntity> findMaps(Long gameId, Set<Long> mapsIds) {
 		Set<MapEntity> maps = this.mapRepository.findAllByGameIdAndIdIn(gameId, mapsIds);
 		if (maps.size() != mapsIds.size()) {
-			mapsIds.removeAll(maps.stream().map(MapEntity::getId).collect(Collectors.toSet()));
-			throw new GamepettoEntityNotFoundException("Not all provided maps couldn't be found", "mapsIds", mapsIds);
+			Set<Long> mapsIdsFound = maps.stream().map(MapEntity::getId).collect(Collectors.toSet());
+			Set<Long> mapsIdsCopy = new HashSet<>(mapsIds);
+			mapsIdsCopy.removeAll(mapsIdsFound);
+			throw new GamepettoEntityNotFoundException("Not all provided maps couldn't be found", "mapsIds", mapsIdsCopy);
 		}
 		return maps;
 	}
