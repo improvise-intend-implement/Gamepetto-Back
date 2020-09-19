@@ -4,9 +4,11 @@ import com.iii.gamepetto.gamepettobackend.exception.GamepettoEntityNotFoundExcep
 import com.iii.gamepetto.gamepettobackend.model.GameEntity;
 import com.iii.gamepetto.gamepettobackend.model.GatherEntity;
 import com.iii.gamepetto.gamepettobackend.model.GuildEntity;
+import com.iii.gamepetto.gamepettobackend.model.MapEntity;
 import com.iii.gamepetto.gamepettobackend.repository.GameRepository;
 import com.iii.gamepetto.gamepettobackend.repository.GatherRepository;
 import com.iii.gamepetto.gamepettobackend.repository.GuildRepository;
+import com.iii.gamepetto.gamepettobackend.repository.MapRepository;
 import com.iii.gamepetto.gamepettobackend.transferobject.request.GatherRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,12 +22,14 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 
 import java.util.Optional;
+import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anySet;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -40,6 +44,8 @@ class GatherServiceImplTest {
 	GuildRepository guildRepository;
 	@Mock
 	GameRepository gameRepository;
+	@Mock
+	MapRepository mapRepository;
 	@Spy
 	ModelMapper modelMapper;
 	@InjectMocks
@@ -158,13 +164,34 @@ class GatherServiceImplTest {
 	}
 
 	@Test
+	void createGatherShouldThrowExceptionWhenSizeOfMapsIdsDoesntMatchSizeOfFoundMapEntities() {
+		assertThrows(GamepettoEntityNotFoundException.class, () -> {
+			//given
+			GatherRequest gatherRequest = new GatherRequest();
+			gatherRequest.setGameId(1L);
+			gatherRequest.setGuildId("213231");
+			gatherRequest.setMapsIds(Set.of(1L, 2L));
+			MapEntity mapEntity1 = new MapEntity();
+			mapEntity1.setId(1L);
+			given(this.gameRepository.findById(anyLong())).willReturn(Optional.of(new GameEntity()));
+			given(this.guildRepository.findById(anyString())).willReturn(Optional.empty());
+			given(this.mapRepository.findAllByGameIdAndIdIn(gatherRequest.getGameId(), gatherRequest.getMapsIds())).willReturn(Set.of(mapEntity1));
+
+			//when
+			this.sut.createGather(gatherRequest);
+		});
+	}
+
+	@Test
 	void createGatherShouldCallGatherRepositorySaveMethod() {
 		//given
 		GatherRequest gatherRequest = new GatherRequest();
 		gatherRequest.setGameId(1L);
 		gatherRequest.setGuildId("123123");
+		gatherRequest.setMapsIds(Set.of(1L, 2L));
 		given(this.gameRepository.findById(gatherRequest.getGameId())).willReturn(Optional.of(new GameEntity()));
 		given(this.guildRepository.findById(gatherRequest.getGuildId())).willReturn(Optional.of(new GuildEntity()));
+		given(this.mapRepository.findAllByGameIdAndIdIn(gatherRequest.getGameId(), gatherRequest.getMapsIds())).willReturn(Set.of(new MapEntity(), new MapEntity()));
 
 		//when
 		this.sut.createGather(gatherRequest);
@@ -180,9 +207,11 @@ class GatherServiceImplTest {
 		GatherRequest gatherRequest = new GatherRequest();
 		gatherRequest.setGameId(1L);
 		gatherRequest.setGuildId("123123");
+		gatherRequest.setMapsIds(Set.of(1L, 2L));
 		given(this.modelMapper.map(gatherRequest, GatherEntity.class)).willReturn(gatherEntity);
 		given(this.gameRepository.findById(gatherRequest.getGameId())).willReturn(Optional.of(new GameEntity()));
 		given(this.guildRepository.findById(gatherRequest.getGuildId())).willReturn(Optional.of(new GuildEntity()));
+		given(this.mapRepository.findAllByGameIdAndIdIn(gatherRequest.getGameId(), gatherRequest.getMapsIds())).willReturn(Set.of(new MapEntity(), new MapEntity()));
 
 		//when
 		this.sut.createGather(gatherRequest);
@@ -190,5 +219,6 @@ class GatherServiceImplTest {
 		//then
 		then(gatherEntity).should(times(1)).setGuild(any(GuildEntity.class));
 		then(gatherEntity).should(times(1)).setGame(any(GameEntity.class));
+		then(gatherEntity).should(times(1)).setMaps(anySet());
 	}
 }

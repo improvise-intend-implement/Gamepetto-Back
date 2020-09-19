@@ -12,11 +12,14 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
 
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
@@ -55,6 +58,9 @@ class GatherRequestValidatorTest {
 		String shortName = IntStream.range(0, this.shortNameMaxLength)
 				.mapToObj(i -> "x")
 				.collect(Collectors.joining());
+		Set<Long> mapsIds = LongStream.range(0, this.mapsNumberMaxValue)
+				.boxed()
+				.collect(Collectors.toSet());
 		this.gatherRequest.setGuildId("123123");
 		this.gatherRequest.setAllAllowed(true);
 		this.gatherRequest.setCaptainRolePriority(true);
@@ -65,6 +71,7 @@ class GatherRequestValidatorTest {
 		this.gatherRequest.setName(name);
 		this.gatherRequest.setShortName(shortName);
 		this.gatherRequest.setMapsRandom(false);
+		this.gatherRequest.setMapsIds(mapsIds);
 		given(this.gatherService.shortNameExists(anyString(), anyString())).willReturn(false);
 		given(this.gatherService.nameExists(anyString(), anyString())).willReturn(false);
 		given(this.gatherService.channelExists(anyString())).willReturn(false);
@@ -85,6 +92,9 @@ class GatherRequestValidatorTest {
 		String shortName = IntStream.range(0, this.shortNameMinLength)
 				.mapToObj(i -> "x")
 				.collect(Collectors.joining());
+		Set<Long> mapsIds = LongStream.range(0, this.mapsNumberMinValue)
+				.boxed()
+				.collect(Collectors.toSet());
 		this.gatherRequest.setGuildId("123123");
 		this.gatherRequest.setAllAllowed(true);
 		this.gatherRequest.setCaptainRolePriority(true);
@@ -95,6 +105,7 @@ class GatherRequestValidatorTest {
 		this.gatherRequest.setName(name);
 		this.gatherRequest.setShortName(shortName);
 		this.gatherRequest.setMapsRandom(false);
+		this.gatherRequest.setMapsIds(mapsIds);
 		given(this.gatherService.shortNameExists(anyString(), anyString())).willReturn(false);
 		given(this.gatherService.nameExists(anyString(), anyString())).willReturn(false);
 		given(this.gatherService.channelExists(anyString())).willReturn(false);
@@ -264,5 +275,42 @@ class GatherRequestValidatorTest {
 		//then
 		assertThat(this.errors.hasErrors(), is(true));
 		assertThat(this.errors.getFieldError("name"), is(notNullValue()));
+	}
+
+	@Test
+	void validatorShouldGenerateErrorWhenMapsIdsSizeIsLessThanMapsNumber() {
+		//given
+		int mapsNumber = this.mapsNumberMinValue;
+		Set<Long> mapsIds = LongStream
+				.range(0, mapsNumber - 1)
+				.boxed()
+				.collect(Collectors.toSet());
+		this.gatherRequest.setMapsNumber(mapsNumber);
+		this.gatherRequest.setMapsIds(mapsIds);
+
+		//when
+		this.sut.validate(this.gatherRequest, this.errors);
+
+		//then
+		assertThat(this.errors.getFieldError("mapsIds"), is(notNullValue()));
+	}
+
+	@ParameterizedTest
+	@ValueSource(ints = {0, 1})
+	void validatorShouldntGenerateErrorWhenMapsIdsSizeIsEqualOrGreater(Integer mapsIncrement) {
+		//given
+		int mapsNumber = this.mapsNumberMinValue;
+		Set<Long> mapsIds = LongStream
+				.range(0, mapsNumber + mapsIncrement)
+				.boxed()
+				.collect(Collectors.toSet());
+		this.gatherRequest.setMapsNumber(mapsNumber);
+		this.gatherRequest.setMapsIds(mapsIds);
+
+		//when
+		this.sut.validate(this.gatherRequest, this.errors);
+
+		//then
+		assertThat(this.errors.getFieldError("mapsIds"), is(nullValue()));
 	}
 }
