@@ -12,7 +12,7 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "Map")
-public class MapEntity  implements Serializable {
+public class MapEntity implements Serializable {
 
 	private static final long serialVersionUID = -7036634752429475884L;
 
