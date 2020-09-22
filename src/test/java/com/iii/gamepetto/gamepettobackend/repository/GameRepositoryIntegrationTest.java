@@ -1,6 +1,7 @@
 package com.iii.gamepetto.gamepettobackend.repository;
 
 import com.iii.gamepetto.gamepettobackend.model.GameEntity;
+import com.iii.gamepetto.gamepettobackend.transferobject.response.GameResponse;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,11 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.emptyOrNullString;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.samePropertyValuesAs;
 
 @DataJpaTest
 class GameRepositoryIntegrationTest {
@@ -51,5 +55,31 @@ class GameRepositoryIntegrationTest {
 		Assertions.assertNotNull(result);
 		assertThat(result.getId(), not(nullValue()));
 		assertThat(result.getName(), not(emptyOrNullString()));
+	}
+
+	@Test
+	void findAllShouldReturnExpectedList() {
+		//given
+		List<GameResponse> expected = this.games.stream()
+				.map(g -> new GameResponse(g.getId(), g.getName()))
+				.collect(Collectors.toList());
+
+		//when
+		List<GameResponse> result = this.sut.findAllBy();
+
+		//then
+		assertThat(result, samePropertyValuesAs(expected));
+	}
+
+	@Test
+	void findAllShouldReturnEmptyListWhenRepositoryIsEmpty() {
+		//given
+		this.sut.deleteAll();
+
+		//when
+		List<GameResponse> result = this.sut.findAllBy();
+
+		//then
+		assertThat(result, hasSize(0));
 	}
 }

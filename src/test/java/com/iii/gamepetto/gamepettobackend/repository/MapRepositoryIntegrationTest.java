@@ -2,6 +2,7 @@ package com.iii.gamepetto.gamepettobackend.repository;
 
 import com.iii.gamepetto.gamepettobackend.model.GameEntity;
 import com.iii.gamepetto.gamepettobackend.model.MapEntity;
+import com.iii.gamepetto.gamepettobackend.transferobject.response.MapResponse;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.samePropertyValuesAs;
 
 @DataJpaTest
 public class MapRepositoryIntegrationTest {
@@ -85,5 +87,21 @@ public class MapRepositoryIntegrationTest {
 
 		//then
 		assertThat(result, hasSize(0));
+	}
+
+	@Test
+	void findAllByGameIdShouldReturnExpectedList() {
+		//given
+		Long gameId = this.games.stream().filter(g -> g.getName().equals("Wolfenstein: ET")).findFirst().get().getId();
+		List<MapResponse> expected = this.maps.stream()
+				.filter(m -> m.getGame().getId().equals(gameId))
+				.map(m -> new MapResponse(m.getId(), m.getName()))
+				.collect(Collectors.toList());
+
+		//when
+		List<MapResponse> result = this.sut.findAllByGameId(gameId);
+
+		//then
+		assertThat(result, samePropertyValuesAs(expected));
 	}
 }

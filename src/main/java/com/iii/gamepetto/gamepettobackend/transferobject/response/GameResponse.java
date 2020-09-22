@@ -8,6 +8,11 @@ public class GameResponse implements Serializable {
 	private Long id;
 	private String name;
 
+	public GameResponse(Long id, String name) {
+		this.id = id;
+		this.name = name;
+	}
+
 	public Long getId() {
 		return id;
 	}
