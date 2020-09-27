@@ -2,7 +2,6 @@
 
 DBHOST=localhost
 DBNAME=gamepetto
-DBROOTPASSWORD=yeah_root_password
 DBUSER=gamepetto
 DBPASSWORD=development_random_password
 GAMEPETTO_BACK_PROFILE=dev
